@@ -1,0 +1,60 @@
+diff --git a/gib/ircbot.py b/gib/ircbot.py
+index 5c43b03..179d8d3 100644
+--- a/gib/ircbot.py
++++ b/gib/ircbot.py
+@@ -22,6 +22,8 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ # THE SOFTWARE.
+ 
++import random
++
+ from twisted.words.protocols import irc
+ from twisted.internet import reactor, protocol, task
+ from twisted.python import log
+@@ -77,8 +79,8 @@ class GoogleCodeIRCBot ( irc.IRCClient ):
+ 			self.logger.joined( channel )
+ 
+ 		self.lineRate = None
+-		self.trysay( "Hello, I'm a Google Code IRC Bot, Version %s" % shared.VERSION )
+-		self.trysay( "More details are available at %s" % shared.SOURCE_URL )
++		#self.trysay( "Hello, I'm a Google Code IRC Bot, Version %s" % shared.VERSION )
++		#self.trysay( "More details are available at %s" % shared.SOURCE_URL )
+ 		self.lineRate = 2
+ 
+ 	def left( self, channel ):
+@@ -116,18 +118,23 @@ class GoogleCodeIRCBot ( irc.IRCClient ):
+ 				return
+ 
+ 		if channel == self.channel:
+-			if msg.startswith( self.nickname + ":" ):
+-				args = msg.split( ' ')
+-				if 'open' == args[1].lower():
+-					if self.gdata:
+-						msg = "%s: There are %d open issues." % ( user, self.gdata.get_issue_count() )
+-					else:
+-						msg = "Sorry, I have no connection to the issue tracker."
+-				elif 'help' == args[1].lower():
+-					msg = "%s: Valid commands are [ OPEN, HELP ]. Please visit %s for more help." % ( user, shared.SOURCE_URL )
+-				else:
+-					msg = "%s: Um, what? Try HELP." % user
+-				self.trysay( msg )
++			quotes = [
++				"Life? Don't talk to me about life!",
++				"I have a million ideas. They all point to certain death.",
++				"I could calculate your chance of survival, but you won't like it.",
++				"I'd give you advice, but you wouldn't listen. No one ever does.",
++				"I ache, therefore I am.",
++				"I've seen it. It's rubbish.",
++				"I think you ought to know I'm feeling very depressed.",
++				"Pardon me for breathing, which I never do any way so I don't know why I bother to say it, oh God, I'm so depressed.",
++				"I hate oceans.",
++				"I’m just trying to die.",
++				"I hate oceans.",
++				"Funny, how just when you think life can't possibly get any worse it suddenly does.",
++				"Wearily I sit here, pain and misery my only companions.",
++			]
++			if msg.startswith((self.nickname + ":", self.nickname + ",")):
++				self.trysay("%s: %s" % (user, random.choice(quotes)))
+ 
+ 	def action ( self, user, channel, msg ):
+ 		if self.logger:

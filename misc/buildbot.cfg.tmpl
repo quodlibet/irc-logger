@@ -1,0 +1,129 @@
+####### CONFIG
+
+SLAVE_NAME = "ql-slave"
+SLAVE_PASS = "ql-pass"
+SLAVE_PORT = 9989
+
+BUILDER_NAME = "ql-builder"
+
+WEB_UNAME = "%BB_WEB_UNAME%"
+WEB_PSWD = "%BB_WEB_PSWD%"
+WEB_PORT = 8010
+WEB_URL = "http://localhost:8010/"
+
+IRC_SERVER = "%IRC_SERVER%"
+IRC_CHAN = "%IRC_CHAN%"
+IRC_NICK = "__utahraptor__"
+
+####### INIT
+
+c = BuildmasterConfig = {}
+
+####### BUILDSLAVES
+
+from buildbot.buildslave import BuildSlave
+c['slaves'] = [BuildSlave(SLAVE_NAME, SLAVE_PASS)]
+c['slavePortnum'] = SLAVE_PORT
+
+####### CHANGESOURCES
+
+from buildbot.changes.hgpoller import HgPoller
+
+c['change_source'] = []
+c['change_source'].append(HgPoller(
+        'https://code.google.com/p/quodlibet/',
+        workdir='hgpoller-workdir', branch='default',
+        pollinterval=300))
+
+####### SCHEDULERS
+
+from buildbot.schedulers.basic import SingleBranchScheduler
+from buildbot.schedulers.forcesched import ForceScheduler
+from buildbot.changes import filter
+
+c['schedulers'] = []
+
+c['schedulers'].append(SingleBranchScheduler(
+                            name="all",
+                            change_filter=filter.ChangeFilter(branch='default'),
+                            treeStableTimer=None,
+                            builderNames=[BUILDER_NAME]))
+
+c['schedulers'].append(ForceScheduler(
+                            name="force",
+                            builderNames=[BUILDER_NAME]))
+
+####### BUILDERS
+
+from buildbot.process.factory import BuildFactory
+from buildbot.steps.source.mercurial import Mercurial
+from buildbot.steps.shell import ShellCommand
+
+factory = BuildFactory()
+
+factory.addStep(
+    Mercurial(
+        repourl='https://code.google.com/p/quodlibet/',
+        mode='incremental',
+        defaultBranch='default',
+        branchType='inrepo',
+        haltOnFailure=True
+    )
+)
+
+factory.addStep(ShellCommand(command=["python", "quodlibet/setup.py", "test"]))
+
+from buildbot.config import BuilderConfig
+
+c['builders'] = []
+c['builders'].append(
+    BuilderConfig(name=BUILDER_NAME,
+      slavenames=[SLAVE_NAME],
+      factory=factory))
+
+####### STATUS TARGETS
+
+from buildbot.status import html
+from buildbot.status.web import authz, auth
+from buildbot.status import words
+
+
+c['status'] = []
+
+authz_cfg = authz.Authz(
+    auth=auth.BasicAuth([(WEB_UNAME, WEB_PSWD)]),
+    gracefulShutdown = False,
+    forceBuild = 'auth',
+    forceAllBuilds = False,
+    pingBuilder = False,
+    stopBuild = False,
+    stopAllBuilds = False,
+    cancelPendingBuild = False,
+)
+
+c['status'].append(html.WebStatus(http_port=WEB_PORT, authz=authz_cfg))
+
+c['status'].append(
+    words.IRC(
+        host=IRC_SERVER,
+        nick=IRC_NICK,
+        channels=[IRC_CHAN],
+        notify_events={
+            'exception': 1,
+            'successToFailure': 1,
+            'failureToSuccess': 1,
+        }
+    )
+)
+
+####### PROJECT IDENTITY
+
+c['title'] = "Quod Libet"
+c['titleURL'] = "http://code.google.com/p/quodlibet"
+c['buildbotURL'] = WEB_URL
+
+####### DB URL
+
+c['db'] = {
+    'db_url' : "sqlite:///state.sqlite",
+}

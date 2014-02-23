@@ -1,0 +1,4 @@
+buildbot/*
+googlebot/*
+web/venv/*
+.*.pid
