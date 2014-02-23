@@ -22,6 +22,17 @@ else
     echo "duckdns updater not running"
 fi
 
+# google bot
+
+GOOGLEPID="$DIR/.google.pid"
+if [ -f "$GOOGLEPID" ]; then
+    pkill -P $(cat "$GOOGLEPID")
+    echo "sent SIGTERM to googlebot process"
+    rm "$GOOGLEPID"
+else
+    echo "google bot not running"
+fi
+
 # web server
 
 WEBPID="$DIR/.web.pid"

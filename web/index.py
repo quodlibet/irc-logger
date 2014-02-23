@@ -2,7 +2,7 @@ import os
 import subprocess
 
 from flask import Flask
-from flask import url_for, redirect, send_from_directory, request
+from flask import url_for, redirect, send_from_directory, request, Response
 
 
 app = Flask(__name__)
@@ -71,6 +71,14 @@ def irc(filename):
     subprocess.call(["logs2html", irc_dir])
 
     return send_from_directory(irc_dir, filename)
+
+
+@app.route('/robots.txt')
+def robots():
+    return Response("""\
+User-agent: *
+Disallow: /
+""", mimetype="text/plain")
 
 
 if __name__ == '__main__':

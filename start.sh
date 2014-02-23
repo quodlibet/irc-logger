@@ -20,6 +20,16 @@ fi
 ./duckdns.sh >/dev/null 2>&1 &
 echo $! > "$DUCKDNSPID"
 
+# google bot
+GOOGLEBOT="$DIR/googlebot/googlecode-irc-bot.py"
+GOOGLEPID="$DIR/.google.pid"
+if [ -f "$GOOGLEPID" ]; then
+    pkill -P $(cat "$GOOGLEPID")
+    rm "$GOOGLEPID"
+fi
+python "$GOOGLEBOT" >/dev/null 2>&1 &
+echo $! > "$GOOGLEPID"
+
 # web server
 
 WEBPID="$DIR/.web.pid"

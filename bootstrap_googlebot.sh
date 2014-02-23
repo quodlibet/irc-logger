@@ -8,5 +8,8 @@ if [ -d "$GOOGLEBOT" ]; then
   exit 1
 fi
 
+sudo apt-get install python-gdata python-feedparser python-yaml python-twisted
+
 git clone https://github.com/jmhobbs/googlecode-irc-bot.git "$GOOGLEBOT"
+patch -p1 -d "$GOOGLEBOT" < "$DIR/misc/googlebot.diff"
 "$DIR/config.py" "$DIR/misc/googlebot.yaml.tmpl" > "$GOOGLEBOT/bots/bot.yaml"

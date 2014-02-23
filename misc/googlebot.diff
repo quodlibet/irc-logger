@@ -1,5 +1,5 @@
 diff --git a/gib/ircbot.py b/gib/ircbot.py
-index 5c43b03..179d8d3 100644
+index 5c43b03..4c38649 100644
 --- a/gib/ircbot.py
 +++ b/gib/ircbot.py
 @@ -22,6 +22,8 @@
@@ -11,8 +11,27 @@ index 5c43b03..179d8d3 100644
  from twisted.words.protocols import irc
  from twisted.internet import reactor, protocol, task
  from twisted.python import log
-@@ -77,8 +79,8 @@ class GoogleCodeIRCBot ( irc.IRCClient ):
- 			self.logger.joined( channel )
+@@ -55,14 +57,10 @@ class GoogleCodeIRCBot ( irc.IRCClient ):
+ 	def connectionMade ( self ):
+ 		irc.IRCClient.connectionMade( self )
+ 		log.msg( self.nickname + ": Connected" )
+-		if self.logger:
+-			self.logger.connected()
+ 
+ 	def connectionLost( self, reason ):
+ 		irc.IRCClient.connectionLost( self, reason )
+ 		log.msg( self.nickname + ": Connection Lost" )
+-		if self.logger:
+-			self.logger.disconnected()
+ 
+ 	def signedOn( self ):
+ 		self.join( self.factory.channel )
+@@ -74,16 +72,26 @@ class GoogleCodeIRCBot ( irc.IRCClient ):
+ 
+ 		log.msg( self.nickname + ": Joined " + self.channel )
+ 		if self.logger:
+-			self.logger.joined( channel )
++			self.logger.joined(self.nickname, channel)
  
  		self.lineRate = None
 -		self.trysay( "Hello, I'm a Google Code IRC Bot, Version %s" % shared.VERSION )
@@ -21,8 +40,23 @@ index 5c43b03..179d8d3 100644
 +		#self.trysay( "More details are available at %s" % shared.SOURCE_URL )
  		self.lineRate = 2
  
++	def userJoined(self, user, channel):
++		if self.logger:
++			self.logger.joined(user, channel)
++
  	def left( self, channel ):
-@@ -116,18 +118,23 @@ class GoogleCodeIRCBot ( irc.IRCClient ):
+ 		log.msg( self.nickname + ": Left Channel " + channel )
+ 		self.channel = None
++		if self.logger:
++			self.logger.left(self.nickname, channel)
++
++	def userLeft(self, user, channel):
++		if self.logger:
++			self.logger.left(user, channel)
+ 
+ 	def trysay( self, msg ):
+ 		"""
+@@ -116,18 +124,23 @@ class GoogleCodeIRCBot ( irc.IRCClient ):
  				return
  
  		if channel == self.channel:
@@ -58,3 +92,66 @@ index 5c43b03..179d8d3 100644
  
  	def action ( self, user, channel, msg ):
  		if self.logger:
+diff --git a/gib/logger.py b/gib/logger.py
+index 9411991..0c0864e 100644
+--- a/gib/logger.py
++++ b/gib/logger.py
+@@ -46,14 +46,11 @@ class IRCLogger:
+ 	def close ( self ):
+ 		self.file.close()
+ 
+-	def connected ( self ):
+-		self.log( "[connected]" )
++	def joined ( self, user, channel ):
++		self.log( "[%s joined %s]" % (user, channel) )
+ 
+-	def disconnected ( self ):
+-		self.log( "[disconnected]" )
+-
+-	def joined ( self, channel ):
+-		self.log( "[joined %s]" % channel )
++	def left(self, user, channel):
++		self.log("[%s left %s]" % (user, channel))
+ 
+ 	def message ( self, user, message ):
+ 		self.log( "<%s> %s" % ( user, message ) )
+diff --git a/gib/readers.py b/gib/readers.py
+index aea31ca..b18f06b 100644
+--- a/gib/readers.py
++++ b/gib/readers.py
+@@ -85,7 +85,7 @@ class GoogleFeedReader:
+ 		for entry in feed['entries']:
+ 			if entry['id'] == self.last_id:
+ 				break
+-			added.append( entry )
++			added.insert(0, entry)
+ 		if 1 <= len( feed['entries'] ):
+ 			self.last_id = feed['entries'][0]['id']
+ 		return added
+diff --git a/googlecode-irc-bot.py b/googlecode-irc-bot.py
+index 2ae7c92..10d660e 100644
+--- a/googlecode-irc-bot.py
++++ b/googlecode-irc-bot.py
+@@ -109,17 +109,12 @@ def main ():
+ 			bot_processes[bot.name].start()
+ 			print "Started", bot.name
+ 
+-	while True:
++	for key, process in bot_processes.items():
+ 		try:
+-			sleep( 60 ) # TODO: Make configurable
+-			for key, process in bot_processes.items():
+-				if not process.is_alive():
+-					print "Bot", key, "has died!"
+-		except KeyboardInterrupt, e:
+-			print "Shutting Down"
+-			exit()
+-		except Exception, e:
+-			print "Error:", e
++			process.join()
++		except:
++			pass
++		print "Stopped", key
+ 
+ if __name__ != '__main__':
+ 	print "This can only be run as a main entry point."
