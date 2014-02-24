@@ -45,6 +45,8 @@ def hello_world():
     <div class="list-group">
         <a class="list-group-item" href="%(base)s:8010/one_line_per_build">Buildbot Status <span class="badge">%(base)s:8010/one_line_per_build</span></a>
         <a class="list-group-item" href="%(base)s/irc/index.html">IRC Logs <span class="badge">%(base)s/irc/index.html</span></a>
+    </div>
+    <div class="list-group">
         <a class="list-group-item" href="https://quodlibet.readthedocs.org/en/latest/">Online Documentation <span class="badge">https://quodlibet.readthedocs.org/en/latest/</span></a>
         <a class="list-group-item" href="http://code.google.com/p/quodlibet/">Main Website <span class="badge">http://code.google.com/p/quodlibet/</span></a>
         <a class="list-group-item" href="http://code.google.com/p/quodlibet/source/checkout">Google Code Repo <span class="badge">http://code.google.com/p/quodlibet/source/checkout</span></a>
