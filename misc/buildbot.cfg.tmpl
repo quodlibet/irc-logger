@@ -71,7 +71,7 @@ factory.addStep(
     )
 )
 
-factory.addStep(ShellCommand(command=["python", "quodlibet/setup.py", "test"]))
+factory.addStep(ShellCommand(command=["xvfb-run", "python", "quodlibet/setup.py", "test"]))
 
 from buildbot.config import BuilderConfig
 
