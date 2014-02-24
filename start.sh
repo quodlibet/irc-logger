@@ -18,7 +18,7 @@ if [ -f "$DUCKDNSPID" ]; then
     kill $(cat "$DUCKDNSPID")
     rm "$DUCKDNSPID"
 fi
-./duckdns_update.sh >/dev/null 2>&1 &
+./duckdns-update.sh >/dev/null 2>&1 &
 echo $! > "$DUCKDNSPID"
 
 # google bot
