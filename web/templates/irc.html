@@ -1,6 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<style>
+.irclog td, .irclog th {
+    border-radius: 5px;
+}
+
+.irclog {
+    border-spacing: 3px;
+    border-collapse: separate;
+}
+</style>
+
 <div style="font-size:1.3em">
 {{ content|safe }}
 </div>

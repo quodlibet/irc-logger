@@ -16,7 +16,6 @@ IRC_NICK = "utahraptor"
 ####### INIT
 
 BUILDER_NAME = "ql-builder"
-PO_BUILDER_NAME = "ql-po-builder"
 
 c = BuildmasterConfig = {}
 
@@ -48,11 +47,11 @@ c['schedulers'].append(SingleBranchScheduler(
                             name="all",
                             change_filter=filter.ChangeFilter(branch='default'),
                             treeStableTimer=None,
-                            builderNames=[BUILDER_NAME, PO_BUILDER_NAME]))
+                            builderNames=[BUILDER_NAME]))
 
 c['schedulers'].append(ForceScheduler(
                             name="force",
-                            builderNames=[BUILDER_NAME, PO_BUILDER_NAME]))
+                            builderNames=[BUILDER_NAME]))
 
 ####### BUILDERS
 
@@ -83,28 +82,6 @@ c['builders'].append(
     BuilderConfig(name=BUILDER_NAME,
       slavenames=[SLAVE_NAME],
       factory=test_factory))
-
-# build po files
-
-po_factory = BuildFactory()
-
-po_factory.addStep(
-    Mercurial(
-        repourl='https://code.google.com/p/quodlibet/',
-        mode='incremental',
-        defaultBranch='default',
-        branchType='inrepo',
-        haltOnFailure=True
-    )
-)
-
-po_factory.addStep(ShellCommand(command=["python", "quodlibet/setup.py", "build_mo"]))
-
-c['builders'].append(
-    BuilderConfig(name=PO_BUILDER_NAME,
-      slavenames=[SLAVE_NAME],
-      factory=po_factory))
-
 
 ####### STATUS TARGETS
 

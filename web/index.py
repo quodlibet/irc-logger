@@ -48,31 +48,6 @@ def irc(filename=None):
                            base=base_url, active="irc")
 
 
-@app.route('/po/')
-@app.route('/po/<path:filename>')
-def po(filename=None):
-    this = os.path.abspath(os.path.dirname(__file__))
-    po_dir = os.path.abspath(
-        os.path.join(this, "..", "buildbot", "slave", "ql-po-builder",
-                     "build", "quodlibet", "po"))
-
-    pos = []
-    for entry in os.listdir(po_dir):
-        if entry.endswith(".po"):
-            pos.append(entry)
-    pos.sort()
-
-    if filename is not None:
-        if filename in pos:
-            return send_from_directory(po_dir, filename)
-        else:
-            abort(404)
-            return
-    else:
-        base_url = request.url_root.rstrip("/")
-        return render_template('po.html', base=base_url, pos=pos, active="po")
-
-
 @app.route('/robots.txt')
 def robots():
     return Response("""\
