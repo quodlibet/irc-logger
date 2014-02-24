@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+        {% if stylesheet %}
+            <link rel="stylesheet" href="{{ stylesheet }}">
+        {% endif %}
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"><img src="http://quodlibet.googlecode.com/hg/quodlibet/quodlibet/images/hicolor/scalable/apps/quodlibet.svg" style="height:1em"> Quod Libet Server</a>
+    </div>
+
+
+    <div class="collapse navbar-collapse" id="navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li{% if active == "buildbot" %} class="active"{% endif %}><a href="/buildbot">Buildbot</a></li>
+        <li{% if active == "irc" %} class="active"{% endif %}><a href="/irc">IRC Logs</a></li>
+        <li{% if active == "po" %} class="active"{% endif %}><a href="/po">Fresh PO Files</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{% block outer %}
+<div class="container well well-lg">
+
+        {% block content %}
+        {% endblock %}
+
+</div>
+{% endblock %}
+
+    </body>
+</html>

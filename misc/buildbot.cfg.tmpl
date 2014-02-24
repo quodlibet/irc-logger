@@ -4,8 +4,6 @@ SLAVE_NAME = "ql-slave"
 SLAVE_PASS = "ql-pass"
 SLAVE_PORT = 9989
 
-BUILDER_NAME = "ql-builder"
-
 WEB_UNAME = "%BB_WEB_UNAME%"
 WEB_PSWD = "%BB_WEB_PSWD%"
 WEB_PORT = 8010
@@ -16,6 +14,9 @@ IRC_CHAN = "%IRC_CHAN%"
 IRC_NICK = "utahraptor"
 
 ####### INIT
+
+BUILDER_NAME = "ql-builder"
+PO_BUILDER_NAME = "ql-po-builder"
 
 c = BuildmasterConfig = {}
 
@@ -47,21 +48,26 @@ c['schedulers'].append(SingleBranchScheduler(
                             name="all",
                             change_filter=filter.ChangeFilter(branch='default'),
                             treeStableTimer=None,
-                            builderNames=[BUILDER_NAME]))
+                            builderNames=[BUILDER_NAME, PO_BUILDER_NAME]))
 
 c['schedulers'].append(ForceScheduler(
                             name="force",
-                            builderNames=[BUILDER_NAME]))
+                            builderNames=[BUILDER_NAME, PO_BUILDER_NAME]))
 
 ####### BUILDERS
 
 from buildbot.process.factory import BuildFactory
 from buildbot.steps.source.mercurial import Mercurial
 from buildbot.steps.shell import ShellCommand
+from buildbot.config import BuilderConfig
 
-factory = BuildFactory()
+c['builders'] = []
 
-factory.addStep(
+# main tests
+
+test_factory = BuildFactory()
+
+test_factory.addStep(
     Mercurial(
         repourl='https://code.google.com/p/quodlibet/',
         mode='incremental',
@@ -71,15 +77,34 @@ factory.addStep(
     )
 )
 
-factory.addStep(ShellCommand(command=["xvfb-run", "python", "quodlibet/setup.py", "test"]))
+test_factory.addStep(ShellCommand(command=["xvfb-run", "python", "quodlibet/setup.py", "test"]))
 
-from buildbot.config import BuilderConfig
-
-c['builders'] = []
 c['builders'].append(
     BuilderConfig(name=BUILDER_NAME,
       slavenames=[SLAVE_NAME],
-      factory=factory))
+      factory=test_factory))
+
+# build po files
+
+po_factory = BuildFactory()
+
+po_factory.addStep(
+    Mercurial(
+        repourl='https://code.google.com/p/quodlibet/',
+        mode='incremental',
+        defaultBranch='default',
+        branchType='inrepo',
+        haltOnFailure=True
+    )
+)
+
+po_factory.addStep(ShellCommand(command=["python", "quodlibet/setup.py", "build_mo"]))
+
+c['builders'].append(
+    BuilderConfig(name=PO_BUILDER_NAME,
+      slavenames=[SLAVE_NAME],
+      factory=po_factory))
+
 
 ####### STATUS TARGETS
 
