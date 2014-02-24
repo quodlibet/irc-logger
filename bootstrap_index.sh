@@ -8,6 +8,8 @@ if [ -d "$VENV" ]; then
   exit 1
 fi
 
+sudo apt-get install python-virtualenv
+
 virtualenv "$VENV"
 source "$VENV/bin/activate"
 pip install irclog2html

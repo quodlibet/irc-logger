@@ -10,7 +10,7 @@ if [ -d "$BUILDBOT" ]; then
   exit 1
 fi
 
-sudo apt-get install buildbot buildbot-slave
+sudo apt-get install buildbot buildbot-slave mercurial
 
 mkdir -p "$BUILDBOT"
 cd "$BUILDBOT"

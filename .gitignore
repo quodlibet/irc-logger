@@ -2,3 +2,4 @@ buildbot/*
 googlebot/*
 web/venv/*
 .*.pid
+main.cfg
