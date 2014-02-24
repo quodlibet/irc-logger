@@ -14,7 +14,11 @@ import os
 def main(argv):
     config = ConfigParser.RawConfigParser()
     current = os.path.dirname(os.path.realpath(__file__))
-    config.read(os.path.join(current, "main.cfg"))
+    config_path = os.path.join(current, "main.cfg")
+    if not os.path.exists(config_path):
+        print >> sys.stderr, "ERROR: main.cfg not found!"
+        return 1
+    config.read(config_path)
 
     values = {}
     for option in config.options("config"):
