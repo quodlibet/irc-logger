@@ -13,6 +13,10 @@ MASTER="$BUILDBOT/master"
 
 GOOGLEBOT="$DIR/googlebot"
 "$DIR/config.py" "$DIR/misc/googlebot.yaml.tmpl" > "$GOOGLEBOT/bots/bot.yaml"
+cd "$GOOGLEBOT"
+git reset HEAD --hard
+cd -
+patch -p1 -d "$GOOGLEBOT" < "$DIR/misc/googlebot.diff"
 
 echo "done."
 echo "Call start.sh to restart all services."
