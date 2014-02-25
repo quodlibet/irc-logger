@@ -118,6 +118,10 @@ for branch in QL_BRANCHES:
         description=["pyflakes/pep8"]))
 
     test_factory.addStep(ShellCommand(
+        command=["python", "quodlibet/setup.py", "bdist"],
+        description=["bdist"]))
+
+    test_factory.addStep(ShellCommand(
         command=["make", "-C", "quodlibet/docs"],
         description=["build docs"]))
 
