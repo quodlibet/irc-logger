@@ -83,7 +83,10 @@ from buildbot.process.factory import BuildFactory
 from buildbot.steps.source.mercurial import Mercurial
 from buildbot.steps.shell import ShellCommand
 from buildbot.config import BuilderConfig
+from buildbot import locks
 
+
+build_lock = locks.SlaveLock("slave_builds", maxCount=1)
 
 c['builders'] = []
 
@@ -94,7 +97,7 @@ for branch in QL_BRANCHES:
         Mercurial(
             repourl='https://code.google.com/p/quodlibet/',
             mode='incremental',
-            defaultBranch='default',
+            defaultBranch=branch,
             branchType='inrepo',
             haltOnFailure=True
         )
@@ -121,7 +124,8 @@ for branch in QL_BRANCHES:
     c['builders'].append(
         BuilderConfig(name=get_builder(branch),
           slavenames=[SLAVE_NAME],
-          factory=test_factory))
+          factory=test_factory,
+          locks=[build_lock.access('counting')]))
 
 ####### STATUS TARGETS
 
