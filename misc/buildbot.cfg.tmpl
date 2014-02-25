@@ -13,15 +13,27 @@ IRC_SERVER = "%IRC_SERVER%"
 IRC_CHAN = "%IRC_CHAN%"
 IRC_NICK = "utahraptor"
 
-####### INIT
+QL_BRANCHES = ["default", "quodlibet-3.0", "quodlibet-2.6"]
 
-BUILDER_NAME = "ql-builder"
+####### HELPERS
+
+def get_builder(branch):
+    assert branch in QL_BRANCHES
+    return "builder-" + branch
+
+
+def get_all_builders():
+    return [get_builder(b) for b in QL_BRANCHES]
+
+####### INIT
 
 c = BuildmasterConfig = {}
 
 ####### BUILDSLAVES
 
 from buildbot.buildslave import BuildSlave
+
+
 c['slaves'] = [BuildSlave(SLAVE_NAME, SLAVE_PASS)]
 c['slavePortnum'] = SLAVE_PORT
 
@@ -29,11 +41,20 @@ c['slavePortnum'] = SLAVE_PORT
 
 from buildbot.changes.hgpoller import HgPoller
 
+
 c['change_source'] = []
-c['change_source'].append(HgPoller(
-        'https://code.google.com/p/quodlibet/',
-        workdir='hgpoller-workdir', branch='default',
-        pollinterval=300))
+
+for branch in QL_BRANCHES:
+    poller = HgPoller(
+            repourl='https://code.google.com/p/quodlibet/',
+            workdir='hgpoller-workdir',
+            branch=branch,
+            pollinterval=300)
+
+    # http://trac.buildbot.net/ticket/2469
+    poller.setName(poller.repourl + poller.branch)
+
+    c['change_source'].append(poller)
 
 ####### SCHEDULERS
 
@@ -41,17 +62,20 @@ from buildbot.schedulers.basic import SingleBranchScheduler
 from buildbot.schedulers.forcesched import ForceScheduler
 from buildbot.changes import filter
 
+
 c['schedulers'] = []
 
-c['schedulers'].append(SingleBranchScheduler(
-                            name="all",
-                            change_filter=filter.ChangeFilter(branch='default'),
-                            treeStableTimer=None,
-                            builderNames=[BUILDER_NAME]))
+for branch in QL_BRANCHES:
+    c['schedulers'].append(SingleBranchScheduler(
+                                name="branch-sched-" + branch,
+                                change_filter=filter.ChangeFilter(
+                                    branch=branch),
+                                treeStableTimer=None,
+                                builderNames=[get_builder(branch)]))
 
 c['schedulers'].append(ForceScheduler(
                             name="force",
-                            builderNames=[BUILDER_NAME]))
+                            builderNames=get_all_builders()))
 
 ####### BUILDERS
 
@@ -60,28 +84,44 @@ from buildbot.steps.source.mercurial import Mercurial
 from buildbot.steps.shell import ShellCommand
 from buildbot.config import BuilderConfig
 
+
 c['builders'] = []
 
-# main tests
+for branch in QL_BRANCHES:
+    test_factory = BuildFactory()
 
-test_factory = BuildFactory()
-
-test_factory.addStep(
-    Mercurial(
-        repourl='https://code.google.com/p/quodlibet/',
-        mode='incremental',
-        defaultBranch='default',
-        branchType='inrepo',
-        haltOnFailure=True
+    test_factory.addStep(
+        Mercurial(
+            repourl='https://code.google.com/p/quodlibet/',
+            mode='incremental',
+            defaultBranch='default',
+            branchType='inrepo',
+            haltOnFailure=True
+        )
     )
-)
 
-test_factory.addStep(ShellCommand(command=["xvfb-run", "python", "quodlibet/setup.py", "test"]))
+    test_factory.addStep(ShellCommand(
+        command=["xvfb-run", "-a", "python", "quodlibet/setup.py", "test"],
+        description=["main tests"]))
 
-c['builders'].append(
-    BuilderConfig(name=BUILDER_NAME,
-      slavenames=[SLAVE_NAME],
-      factory=test_factory))
+    test_factory.addStep(ShellCommand(
+        command=["xvfb-run", "-a", "python", "quodlibet/setup.py", "test",
+                 "--suite", "plugin"],
+        description=["plugin tests"]))
+
+    test_factory.addStep(ShellCommand(
+        command=["xvfb-run", "-a", "python", "quodlibet/setup.py", "test",
+                 "--suite", "quality"],
+        description=["pyflakes/pep8"]))
+
+    test_factory.addStep(ShellCommand(
+        command=["make", "-C", "quodlibet/docs"],
+        description=["build docs"]))
+
+    c['builders'].append(
+        BuilderConfig(name=get_builder(branch),
+          slavenames=[SLAVE_NAME],
+          factory=test_factory))
 
 ####### STATUS TARGETS
 
@@ -96,11 +136,11 @@ authz_cfg = authz.Authz(
     auth=auth.BasicAuth([(WEB_UNAME, WEB_PSWD)]),
     gracefulShutdown = False,
     forceBuild = 'auth',
-    forceAllBuilds = False,
-    pingBuilder = False,
-    stopBuild = False,
-    stopAllBuilds = False,
-    cancelPendingBuild = False,
+    forceAllBuilds = 'auth',
+    pingBuilder = 'auth',
+    stopBuild = 'auth',
+    stopAllBuilds = 'auth',
+    cancelPendingBuild = 'auth',
 )
 
 c['status'].append(html.WebStatus(http_port=WEB_PORT, authz=authz_cfg))
