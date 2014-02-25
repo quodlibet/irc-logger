@@ -21,9 +21,13 @@ def buildbot():
     return render_template('buildbot.html', base=base_url, active="buildbot")
 
 
+irclogs_mtime = -1
+
 @app.route('/irc/')
 @app.route('/irc/<path:filename>')
 def irc(filename=None):
+    global irclogs_mtime
+
     if filename is None:
         return redirect("/irc/index.html")
 
@@ -31,14 +35,25 @@ def irc(filename=None):
     irc_dir = os.path.abspath(
         os.path.join(this, "..", "googlebot", "irc-logs"))
 
-    # update html logs first
-    try:
-        subprocess.call(["logs2html", irc_dir])
-    except OSError:
-        pass
-
     if not filename.endswith(".html"):
         return send_from_directory(irc_dir, filename)
+
+    update_needed = False
+    # do our own mtime check here as well since calling logs2html is expensive
+    # even if it does nothing
+    for file_ in os.listdir(irc_dir):
+        path = os.path.join(irc_dir, file_)
+        mtime = os.path.getmtime(path)
+        if mtime > irclogs_mtime:
+            irclogs_mtime = mtime
+            update_needed = True
+
+    if update_needed:
+        # update html logs first
+        try:
+            subprocess.call(["logs2html", irc_dir])
+        except OSError:
+            pass
 
     path = os.path.join(irc_dir, filename)
     data = open(path, "rb").read().decode("utf-8")
