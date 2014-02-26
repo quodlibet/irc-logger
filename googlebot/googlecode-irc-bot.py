@@ -28,6 +28,7 @@
 # http://strobe.cc/quodlibot/
 
 import sys
+import os
 
 from twisted.internet import reactor, task
 from twisted.python import log
@@ -42,6 +43,10 @@ def run_bot(project):
 
     if project.settings['project']['logging']:
         irc_logs = sys.path[0] + "/irc-logs/"
+        try:
+            os.makedirs(irc_logs)
+        except OSError:
+            pass
         bot_cls.logger = logger.IRCLogger(irc_logs, project.name)
 
     factory = ircbot.GoogleCodeIRCBotFactory(
