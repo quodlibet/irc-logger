@@ -78,8 +78,8 @@ class GoogleFeedReader(object):
                     break
                 added.insert(0, entry)
 
-                if feed['entries']:
-                    self.last_id = feed['entries'][0]['id']
+            if feed['entries']:
+                self.last_id = feed['entries'][0]['id']
 
         # oldest first
         return added
