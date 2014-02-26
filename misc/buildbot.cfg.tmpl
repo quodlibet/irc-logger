@@ -17,9 +17,8 @@ IRC_SERVER = "%IRC_SERVER%"
 IRC_CHAN = "%IRC_CHAN%"
 IRC_NICK = "utahraptor"
 
-QL_BRANCHES = ["default", "quodlibet-3.0", "quodlibet-2.6"]
-
-WIN_BUILDER = "win32-builder-default"
+QL_BRANCHES = ["default", "quodlibet-3.1", "quodlibet-3.0", "quodlibet-2.6"]
+QL_WIN_BRANCHES = ["default", "quodlibet-3.1"]
 
 ####### HELPERS
 
@@ -28,8 +27,17 @@ def get_builder(branch):
     return "builder-" + branch
 
 
+def get_win_builder(branch):
+    assert branch in QL_WIN_BRANCHES
+    return "win32-builder-" + branch
+
+
 def get_all_builders():
     return [get_builder(b) for b in QL_BRANCHES]
+
+
+def get_all_win_builders():
+    return [get_builder(b) for b in QL_WIN_BRANCHES]
 
 ####### INIT
 
@@ -51,7 +59,7 @@ from buildbot.changes.hgpoller import HgPoller
 
 c['change_source'] = []
 
-for branch in QL_BRANCHES:
+for branch in set(QL_BRANCHES + QL_WIN_BRANCHES):
     poller = HgPoller(
             repourl='https://code.google.com/p/quodlibet/',
             workdir='hgpoller-workdir',
@@ -80,16 +88,16 @@ for branch in QL_BRANCHES:
                                 treeStableTimer=None,
                                 builderNames=[get_builder(branch)]))
 
-c['schedulers'].append(SingleBranchScheduler(
-                            name="branch-sched-win-default",
-                            change_filter=filter.ChangeFilter(
-                                branch="default"),
-                            treeStableTimer=None,
-                            builderNames=[WIN_BUILDER]))
+for branch in QL_WIN_BRANCHES:
+    c['schedulers'].append(SingleBranchScheduler(
+                                name="branch-sched-win-" + branch,
+                                change_filter=filter.ChangeFilter(
+                                    branch=branch),
+                                treeStableTimer=None,
+                                builderNames=[get_win_builder(branch)]))
 
 c['schedulers'].append(ForceScheduler(
-                            name="force",
-                            builderNames=get_all_builders() + [WIN_BUILDER]))
+    name="force", builderNames=get_all_builders() + get_all_win_builders()))
 
 ####### BUILDERS
 
@@ -149,29 +157,32 @@ for branch in QL_BRANCHES:
           factory=test_factory,
           locks=[build_lock.access('counting')]))
 
-# windows for default on a different slave
+# windows on a different slave
 
-test_factory = BuildFactory()
+build_win_lock = locks.SlaveLock("slave_win_builds", maxCount=1)
 
-test_factory.addStep(
-    Mercurial(
-        repourl='https://code.google.com/p/quodlibet/',
-        mode='incremental',
-        defaultBranch="default",
-        branchType='inrepo',
-        haltOnFailure=True
+for branch in QL_WIN_BRANCHES:
+    test_factory = BuildFactory()
+
+    test_factory.addStep(
+        Mercurial(
+            repourl='https://code.google.com/p/quodlibet/',
+            mode='incremental',
+            defaultBranch=branch,
+            branchType='inrepo',
+            haltOnFailure=True
+        )
     )
-)
 
-test_factory.addStep(ShellCommand(
-    command=["bash", "win_installer/buildbot_test.sh"],
-    description=["main tests"]))
+    test_factory.addStep(ShellCommand(
+        command=["bash", "win_installer/buildbot_test.sh"],
+        description=["main tests"]))
 
-c['builders'].append(
-    BuilderConfig(name=WIN_BUILDER,
-      slavenames=[WIN_SLAVE_NAME],
-      factory=test_factory)
-)
+    c['builders'].append(
+        BuilderConfig(name=get_win_builder(branch),
+          slavenames=[WIN_SLAVE_NAME],
+          factory=test_factory,
+          locks=[build_win_lock.access('counting')]))
 
 ####### STATUS TARGETS
 
