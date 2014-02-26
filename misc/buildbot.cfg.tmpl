@@ -2,6 +2,10 @@
 
 SLAVE_NAME = "ql-slave"
 SLAVE_PASS = "ql-pass"
+
+WIN_SLAVE_NAME = "ql-win-slave"
+WIN_SLAVE_PASS = "ql-pass"
+
 SLAVE_PORT = 9989
 
 WEB_UNAME = "%BB_WEB_UNAME%"
@@ -14,6 +18,8 @@ IRC_CHAN = "%IRC_CHAN%"
 IRC_NICK = "utahraptor"
 
 QL_BRANCHES = ["default", "quodlibet-3.0", "quodlibet-2.6"]
+
+WIN_BUILDER = "win32-builder-default"
 
 ####### HELPERS
 
@@ -34,7 +40,8 @@ c = BuildmasterConfig = {}
 from buildbot.buildslave import BuildSlave
 
 
-c['slaves'] = [BuildSlave(SLAVE_NAME, SLAVE_PASS)]
+c['slaves'] = [BuildSlave(SLAVE_NAME, SLAVE_PASS),
+               BuildSlave(WIN_SLAVE_NAME, WIN_SLAVE_PASS)]
 c['slavePortnum'] = SLAVE_PORT
 
 ####### CHANGESOURCES
@@ -73,9 +80,16 @@ for branch in QL_BRANCHES:
                                 treeStableTimer=None,
                                 builderNames=[get_builder(branch)]))
 
+c['schedulers'].append(SingleBranchScheduler(
+                            name="branch-sched-win-default",
+                            change_filter=filter.ChangeFilter(
+                                branch="default"),
+                            treeStableTimer=None,
+                            builderNames=[WIN_BUILDER]))
+
 c['schedulers'].append(ForceScheduler(
                             name="force",
-                            builderNames=get_all_builders()))
+                            builderNames=get_all_builders() + [WIN_BUILDER]))
 
 ####### BUILDERS
 
@@ -89,6 +103,8 @@ from buildbot import locks
 build_lock = locks.SlaveLock("slave_builds", maxCount=1)
 
 c['builders'] = []
+
+# linux for all branches
 
 for branch in QL_BRANCHES:
     test_factory = BuildFactory()
@@ -132,6 +148,30 @@ for branch in QL_BRANCHES:
           slavenames=[SLAVE_NAME],
           factory=test_factory,
           locks=[build_lock.access('counting')]))
+
+# windows for default on a different slave
+
+test_factory = BuildFactory()
+
+test_factory.addStep(
+    Mercurial(
+        repourl='https://code.google.com/p/quodlibet/',
+        mode='incremental',
+        defaultBranch="default",
+        branchType='inrepo',
+        haltOnFailure=True
+    )
+)
+
+test_factory.addStep(ShellCommand(
+    command=["bash", "win_installer/buildbot_test.sh"],
+    description=["main tests"]))
+
+c['builders'].append(
+    BuilderConfig(name=WIN_BUILDER,
+      slavenames=[WIN_SLAVE_NAME],
+      factory=test_factory)
+)
 
 ####### STATUS TARGETS
 
