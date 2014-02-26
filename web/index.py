@@ -18,7 +18,24 @@ def index():
 @app.route('/buildbot')
 def buildbot():
     base_url = request.url_root.rstrip("/")
-    return render_template('buildbot.html', base=base_url, active="buildbot")
+    iframe = "%s:8010/one_line_per_build" % base_url
+    return render_template('iframe.html', base=base_url, active="buildbot",
+                            iframe_url=iframe)
+
+
+@app.route('/docs')
+def docs():
+    base_url = request.url_root.rstrip("/")
+    iframe = "https://quodlibet.readthedocs.org/en/latest/"
+    return render_template('iframe.html', base=base_url, active="docs",
+                            iframe_url=iframe)
+
+@app.route('/ml')
+def bug():
+    base_url = request.url_root.rstrip("/")
+    iframe = "https://groups.google.com/forum/#!forum/quod-libet-development"
+    return render_template('iframe.html', base=base_url, active="ml",
+                            iframe_url=iframe)
 
 
 irclogs_mtime = -1

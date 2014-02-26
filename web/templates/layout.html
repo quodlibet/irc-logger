@@ -25,14 +25,19 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/"><img src="http://quodlibet.googlecode.com/hg/quodlibet/quodlibet/images/hicolor/scalable/apps/quodlibet.svg" style="height:1em"> Quod Libet Server</a>
+      <a class="navbar-brand" href="/"><img src="http://quodlibet.googlecode.com/hg/quodlibet/quodlibet/images/hicolor/scalable/apps/quodlibet.svg" style="height:1em"> Quod Libet Hub</a>
     </div>
 
 
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
       <ul class="nav navbar-nav">
+        <li{% if active == "docs" %} class="active"{% endif %}><a href="/docs">Docs</a></li>
         <li{% if active == "buildbot" %} class="active"{% endif %}><a href="/buildbot">Buildbot</a></li>
         <li{% if active == "irc" %} class="active"{% endif %}><a href="/irc">IRC Logs</a></li>
+        <li><a>|</a></li>
+        <li><a href="https://code.google.com/p/quodlibet/source/list">Repo</a></li>
+        <li><a href="https://code.google.com/p/quodlibet/issues/list">Bug Tracker</a></li>
+        <li><a href="https://groups.google.com/forum/#!forum/quod-libet-development">Mailing List</a></li>
       </ul>
     </div>
   </div>
