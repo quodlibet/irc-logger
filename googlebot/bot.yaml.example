@@ -1,14 +1,15 @@
 project:
   name: 'quodlibet'
   bot:
-    name: 'marvin'
-    channel: '%IRC_CHAN%'
-    server: '%IRC_SERVER%'
+    name: 'marvin1234'
+    channel: '#lazka'
+    server: 'irc.freenode.org'
     port: 6667
   feeds:
-    issues: 60
+    issues: 65
+    code: 60
     downloads: 0
     wiki: 0
-    code: 60
   logging: True
   vcs: hg
+
