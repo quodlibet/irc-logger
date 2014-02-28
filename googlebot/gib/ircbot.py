@@ -86,6 +86,10 @@ class GoogleCodeIRCBot(irc.IRCClient):
         if self.logger:
             self.logger.left(user, channel)
 
+    def userQuit(self, user, quitMessage):
+        if self.logger:
+            self.logger.quit(user, quitMessage)
+
     def trysay(self, msg):
         """Attempts to send the given message to the channel."""
 
@@ -112,11 +116,9 @@ class GoogleCodeIRCBot(irc.IRCClient):
         if self.logger:
             self.logger.action(user, msg)
 
-    def irc_NICK(self, prefix, params):
+    def userRenamed(self, oldname, newname):
         if self.logger:
-            old_nick = prefix.split('!')[0]
-            new_nick = params[0]
-            self.logger.nick_change(old_nick, new_nick)
+            self.logger.nick_change(oldname, newname)
 
 
 class GoogleCodeIRCBotFactory(protocol.ReconnectingClientFactory):
