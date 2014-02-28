@@ -51,6 +51,7 @@ from buildbot.buildslave import BuildSlave
 c['slaves'] = [BuildSlave(SLAVE_NAME, SLAVE_PASS),
                BuildSlave(WIN_SLAVE_NAME, WIN_SLAVE_PASS)]
 c['slavePortnum'] = SLAVE_PORT
+c['mergeRequests'] = True
 
 ####### CHANGESOURCES
 
