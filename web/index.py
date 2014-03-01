@@ -18,7 +18,7 @@ def index():
 @app.route('/buildbot')
 def buildbot():
     base_url = request.url_root.rstrip("/")
-    iframe = "%s:8010/one_line_per_build" % base_url
+    iframe = "%s:8010/builders" % base_url
     return render_template('iframe.html', base=base_url, active="buildbot",
                             iframe_url=iframe)
 
