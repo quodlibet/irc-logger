@@ -3,9 +3,6 @@
 SLAVE_NAME = "ql-slave"
 SLAVE_PASS = "ql-pass"
 
-WIN_SLAVE_NAME = "ql-win-slave"
-WIN_SLAVE_PASS = "ql-pass"
-
 SLAVE_PORT = 9989
 
 WEB_UNAME = "%BB_WEB_UNAME%"
@@ -48,8 +45,7 @@ c = BuildmasterConfig = {}
 from buildbot.buildslave import BuildSlave
 
 
-c['slaves'] = [BuildSlave(SLAVE_NAME, SLAVE_PASS),
-               BuildSlave(WIN_SLAVE_NAME, WIN_SLAVE_PASS)]
+c['slaves'] = [BuildSlave(SLAVE_NAME, SLAVE_PASS)]
 c['slavePortnum'] = SLAVE_PORT
 c['mergeRequests'] = True
 
@@ -158,9 +154,7 @@ for branch in QL_BRANCHES:
           factory=test_factory,
           locks=[build_lock.access('counting')]))
 
-# windows on a different slave
-
-build_win_lock = locks.SlaveLock("slave_win_builds", maxCount=1)
+# windows
 
 for branch in QL_WIN_BRANCHES:
     test_factory = BuildFactory()
@@ -176,14 +170,14 @@ for branch in QL_WIN_BRANCHES:
     )
 
     test_factory.addStep(ShellCommand(
-        command=["bash", "win_installer/buildbot_test.sh"],
+        command=["xvfb-run", "-a", "bash", "win_installer/buildbot_test.sh"],
         description=["main tests"]))
 
     c['builders'].append(
         BuilderConfig(name=get_win_builder(branch),
-          slavenames=[WIN_SLAVE_NAME],
+          slavenames=[SLAVE_NAME],
           factory=test_factory,
-          locks=[build_win_lock.access('counting')]))
+          locks=[build_lock.access('counting')]))
 
 ####### STATUS TARGETS
 

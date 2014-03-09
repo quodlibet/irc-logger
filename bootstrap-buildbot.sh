@@ -10,7 +10,13 @@ if [ -d "$BUILDBOT" ]; then
   exit 1
 fi
 
-sudo apt-get install buildbot buildbot-slave mercurial
+sudo apt-get install buildbot buildbot-slave
+
+sudo apt-get install mercurial xvfb intltool wine python-sphinx pyflakes pep8 \
+    p7zip-full
+
+sudo apt-get install python-gtk2 python-gst0.10 gstreamer0.10-plugins-base \
+    gstreamer0.10-plugins-good
 
 mkdir -p "$BUILDBOT"
 cd "$BUILDBOT"
