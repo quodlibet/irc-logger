@@ -14,6 +14,7 @@ virtualenv "$VENV"
 source "$VENV/bin/activate"
 pip install irclog2html
 pip install flask
+pip install tornado
 
 # allow us to bind to port 80
 sudo apt-get install authbind
