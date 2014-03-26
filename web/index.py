@@ -89,4 +89,13 @@ Disallow: /
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, use_reloader=False, debug=False)
+
+    #app.run(host='0.0.0.0', port=80, use_reloader=False, debug=False)
+
+    from tornado.wsgi import WSGIContainer
+    from tornado.httpserver import HTTPServer
+    from tornado.ioloop import IOLoop
+
+    http_server = HTTPServer(WSGIContainer(app))
+    http_server.listen(80)
+    IOLoop.instance().start()
