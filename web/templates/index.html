@@ -19,4 +19,23 @@ All the code is available on <a href="https://github.com/lazka/quodlibet-continu
     <a class="list-group-item" href="{{ base }}/irc">IRC Logs <span class="badge">{{ base }}/irc</span></a>
 </div>
 
+<h4>Bug Tracker Updates</h4>
+
+<br>
+
+<ul class="list-group">
+    <li class="list-group-item">
+        <div id="divRss"></div>
+    </li>
+</ul>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#divRss').FeedEk({
+            FeedUrl:'https://code.google.com/feeds/p/quodlibet/issueupdates/basic',
+            MaxCount: 10,
+        });
+    });
+</script>
+
 {% endblock %}

@@ -38,6 +38,12 @@ def bug():
                             iframe_url=iframe)
 
 
+@app.route('/static/<path:filename>')
+def static_(filename):
+    static_path = os.path.join(this, "static")
+    return send_from_directory(static_path, filename)
+
+
 irclogs_mtime = -1
 
 @app.route('/irc/')
