@@ -135,10 +135,11 @@ for branch in QL_BRANCHES:
                      "--suite", "plugin"],
             description=["plugin tests"]))
 
-    test_factory.addStep(ShellCommand(
-        command=["xvfb-run", "-a", "python", "quodlibet/setup.py", "test",
-                 "--suite", "quality"],
-        description=["pyflakes/pep8"]))
+    # different pep8/pyflakes versions are annoying.. do manual testing
+    #test_factory.addStep(ShellCommand(
+    #    command=["xvfb-run", "-a", "python", "quodlibet/setup.py", "test",
+    #             "--suite", "quality"],
+    #    description=["pyflakes/pep8"]))
 
     test_factory.addStep(ShellCommand(
         command=["python", "quodlibet/setup.py", "bdist"],
