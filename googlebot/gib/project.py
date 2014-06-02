@@ -52,12 +52,7 @@ class Project(object):
                 if key not in self.settings['project']['bot'].keys():
                     raise KeyError('/project/bot/' + key)
 
-            for key in ('issues', 'downloads', 'wiki'):
-                if key not in self.settings['project']['feeds'].keys():
-                    raise KeyError('/project/feeds/' + key)
-
             self.name = self.settings['project']['name']
-            self.vcs = self.settings['project']['vcs']
 
         except IOError as e:
             raise Exception("Error Opening Bot Description - " +

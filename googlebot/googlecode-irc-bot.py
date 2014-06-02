@@ -30,10 +30,10 @@
 import sys
 import os
 
-from twisted.internet import reactor, task
+from twisted.internet import reactor
 from twisted.python import log
 
-from gib import ircbot, project, readers, logger
+from gib import ircbot, project, logger
 
 
 def run_bot(project):
@@ -52,50 +52,9 @@ def run_bot(project):
     factory = ircbot.GoogleCodeIRCBotFactory(
         project.settings['project']['bot']['channel'])
 
-    issues_feed = None
-    if project.settings['project']['feeds']['issues'] != 0:
-        issues_feed = readers.IssueUpdatesReader(project.name)
-
-    downloads_feed = None
-    if project.settings['project']['feeds']['downloads'] != 0:
-        downloads_feed = readers.DownloadsReader(project.name)
-
-    wiki_feed = None
-    if project.settings['project']['feeds']['wiki'] != 0:
-        wiki_feed = readers.WikiReader(project.name, project.vcs)
-
-    code_feed = None
-    if project.settings['project']['feeds']['code'] != 0:
-        code_feed = readers.CodeUpdatesReader(project.name, project.vcs)
-
     reactor.connectTCP(project.settings['project']['bot']['server'],
                        project.settings['project']['bot']['port'],
                        factory)
-
-    if issues_feed:
-        issues_update_task = task.LoopingCall(ircbot.announce, issues_feed)
-        issues_update_task.start(
-            project.settings['project']['feeds']['issues'], now=False)
-        reactor.callLater(20, ircbot.announce, issues_feed)
-
-    if downloads_feed:
-        downloads_update_task = task.LoopingCall(
-            ircbot.announce, downloads_feed)
-        downloads_update_task.start(
-            project.settings['project']['feeds']['downloads'], now=False)
-        reactor.callLater(20, ircbot.announce, downloads_feed)
-
-    if wiki_feed:
-        wiki_update_task = task.LoopingCall(ircbot.announce, wiki_feed)
-        wiki_update_task.start(
-            project.settings['project']['feeds']['wiki'], now=False)
-        reactor.callLater(20, ircbot.announce, wiki_feed)
-
-    if code_feed:
-        code_update_task = task.LoopingCall(ircbot.announce, code_feed)
-        code_update_task.start(
-            project.settings['project']['feeds']['code'], now=False)
-        reactor.callLater(20, ircbot.announce, code_feed)
 
     reactor.run()
 
