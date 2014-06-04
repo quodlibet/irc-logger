@@ -35,6 +35,18 @@ else
     echo "google bot not running"
 fi
 
+# pypy bot
+
+PYPYPID="$DIR/.pypy.pid"
+if [ -f "$PYPYPID" ]; then
+    pkill -P $(cat "$PYPYPID")
+    kill $(cat "$PYPYPID")
+    echo "sent SIGTERM to pypybot process"
+    rm "$PYPYPID"
+else
+    echo "pypy bot not running"
+fi
+
 # web server
 
 WEBPID="$DIR/.web.pid"

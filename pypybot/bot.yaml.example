@@ -1,0 +1,14 @@
+project:
+  name: 'pypy'
+  bot:
+    name: 'marvin'
+    channel: '#pypy'
+    server: 'irc.freenode.org'
+    port: 6667
+  feeds:
+    issues: 60
+    downloads: 0
+    wiki: 0
+    code: 60
+  logging: True
+  vcs: hg

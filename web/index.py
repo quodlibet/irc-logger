@@ -44,19 +44,10 @@ def static_(filename):
     return send_from_directory(static_path, filename)
 
 
-irclogs_mtime = -1
-
-@app.route('/irc/')
-@app.route('/irc/<path:filename>')
-def irc(filename=None):
-    global irclogs_mtime
+def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
 
     if filename is None:
-        return redirect("/irc/index.html")
-
-    this = os.path.abspath(os.path.dirname(__file__))
-    irc_dir = os.path.abspath(
-        os.path.join(this, "..", "googlebot", "irc-logs"))
+        return redirect("/%s/index.html" % name)
 
     if not filename.endswith(".html"):
         return send_from_directory(irc_dir, filename)
@@ -67,8 +58,8 @@ def irc(filename=None):
     for file_ in os.listdir(irc_dir):
         path = os.path.join(irc_dir, file_)
         mtime = os.path.getmtime(path)
-        if mtime > irclogs_mtime:
-            irclogs_mtime = mtime
+        if mtime > dir_mtime.get(irc_dir, -1):
+            dir_mtime[irc_dir] = mtime
             update_needed = True
 
     if update_needed:
@@ -83,7 +74,27 @@ def irc(filename=None):
     data = data[data.find("<body>") + 6:data.find("</body")]
     base_url = request.url_root.rstrip("/")
     return render_template('irc.html', content=data, stylesheet="irclog.css",
-                           base=base_url, active="irc")
+                           base=base_url, active=name)
+
+
+@app.route('/irc/')
+@app.route('/irc/<path:filename>')
+def irc(filename=None):
+    this = os.path.abspath(os.path.dirname(__file__))
+    irc_dir = os.path.abspath(
+        os.path.join(this, "..", "googlebot", "irc-logs"))
+
+    return irc_logs(irc_dir, "irc", filename)
+
+
+@app.route('/pypy/')
+@app.route('/pypy/<path:filename>')
+def irc_pypy(filename=None):
+    this = os.path.abspath(os.path.dirname(__file__))
+    irc_dir = os.path.abspath(
+        os.path.join(this, "..", "pypybot", "irc-logs"))
+
+    return irc_logs(irc_dir, "pypy", filename)
 
 
 @app.route('/robots.txt')
@@ -96,7 +107,7 @@ Disallow: /
 
 if __name__ == '__main__':
 
-    #app.run(host='0.0.0.0', port=80, use_reloader=False, debug=False)
+    app.run(host='0.0.0.0', port=80, use_reloader=False, debug=True)
 
     from tornado.wsgi import WSGIContainer
     from tornado.httpserver import HTTPServer

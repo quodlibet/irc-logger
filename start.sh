@@ -33,6 +33,18 @@ fi
 python "$GOOGLEBOT" >/dev/null 2>&1 &
 echo $! > "$GOOGLEPID"
 
+# pypy bot
+
+PYPYBOT="$DIR/pypybot/googlecode-irc-bot.py"
+PYPYPID="$DIR/.pypy.pid"
+if [ -f "$PYPYPID" ]; then
+    pkill -P $(cat "$PYPYPID")
+    kill $(cat "$PYPYPID")
+    rm "$PYPYPID"
+fi
+python "$PYPYBOT" >/dev/null 2>&1 &
+echo $! > "$PYPYPID"
+
 # web server
 
 WEBAPP="$DIR/web/index.py"
