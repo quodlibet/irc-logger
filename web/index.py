@@ -1,8 +1,8 @@
 import os
 import subprocess
 
-from flask import Flask, abort, render_template
-from flask import url_for, redirect, send_from_directory, request, Response
+from flask import Flask, render_template
+from flask import redirect, send_from_directory, request, Response
 
 
 app = Flask(__name__)
@@ -40,6 +40,7 @@ def bug():
 
 @app.route('/static/<path:filename>')
 def static_(filename):
+    this = os.path.abspath(os.path.dirname(__file__))
     static_path = os.path.join(this, "static")
     return send_from_directory(static_path, filename)
 
@@ -95,6 +96,16 @@ def irc_pypy(filename=None):
         os.path.join(this, "..", "pypybot", "irc-logs"))
 
     return irc_logs(irc_dir, "pypy", filename)
+
+
+@app.route('/gtk/')
+@app.route('/gtk/<path:filename>')
+def irc_gtk(filename=None):
+    this = os.path.abspath(os.path.dirname(__file__))
+    irc_dir = os.path.abspath(
+        os.path.join(this, "..", "gtkbot", "irc-logs"))
+
+    return irc_logs(irc_dir, "gtk", filename)
 
 
 @app.route('/robots.txt')
