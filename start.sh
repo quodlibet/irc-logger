@@ -45,6 +45,18 @@ fi
 python "$PYPYBOT" >/dev/null 2>&1 &
 echo $! > "$PYPYPID"
 
+# gtk bot
+
+GTKBOT="$DIR/gtkbot/googlecode-irc-bot.py"
+GTKPID="$DIR/.gtk.pid"
+if [ -f "$GTKPID" ]; then
+    pkill -P $(cat "$GTKPID")
+    kill $(cat "$GTKPID")
+    rm "$GTKPID"
+fi
+python "$GTKBOT" >/dev/null 2>&1 &
+echo $! > "$GTKPID"
+
 # web server
 
 WEBAPP="$DIR/web/index.py"

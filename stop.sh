@@ -47,6 +47,18 @@ else
     echo "pypy bot not running"
 fi
 
+# gtk bot
+
+GTKPID="$DIR/.gtk.pid"
+if [ -f "$GTKPID" ]; then
+    pkill -P $(cat "$GTKPID")
+    kill $(cat "$GTKPID")
+    echo "sent SIGTERM to gtkbot process"
+    rm "$GTKPID"
+else
+    echo "gtk bot not running"
+fi
+
 # web server
 
 WEBPID="$DIR/.web.pid"
