@@ -98,14 +98,14 @@ def irc_pypy(filename=None):
     return irc_logs(irc_dir, "pypy", filename)
 
 
-@app.route('/gtk/')
-@app.route('/gtk/<path:filename>')
+@app.route('/foo/')
+@app.route('/foo/<path:filename>')
 def irc_gtk(filename=None):
     this = os.path.abspath(os.path.dirname(__file__))
     irc_dir = os.path.abspath(
         os.path.join(this, "..", "gtkbot", "irc-logs"))
 
-    return irc_logs(irc_dir, "gtk", filename)
+    return irc_logs(irc_dir, "foo", filename)
 
 
 @app.route('/robots.txt')
