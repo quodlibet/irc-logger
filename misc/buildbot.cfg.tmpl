@@ -126,6 +126,10 @@ for branch in QL_BRANCHES:
     )
 
     test_factory.addStep(ShellCommand(
+        command=["python", "quodlibet/setup.py", "clean", "--all"],
+        description=["clean"]))
+
+    test_factory.addStep(ShellCommand(
         command=["xvfb-run", "-a", "python", "quodlibet/setup.py", "test"],
         description=["main tests"]))
 
