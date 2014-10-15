@@ -3,8 +3,7 @@
 BB_WEB_UNAME=foobar
 BB_WEB_PSWD=foobar
 
-DUCKDNS_DOMAIN=quodlibet
-DUCKDNS_TOKEN=xxx-xxx-xxx-xxx
+FREEDNS_TOKEN=xxx-xxx-xxx-xxx
 
 IRC_SERVER=irc.freenode.org
 IRC_CHAN=#lazka
