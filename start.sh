@@ -10,16 +10,16 @@ SLAVE="$BUILDBOT/slave"
 buildbot restart "$MASTER"
 buildslave restart "$SLAVE"
 
-# freedns updater
+# duckdns updater
 
-FREEDNSPID="$DIR/.freedns.pid"
-if [ -f "$FREEDNSPID" ]; then
-    pkill -P $(cat "$FREEDNSPID")
-    kill $(cat "$FREEDNSPID")
-    rm "$FREEDNSPID"
+DUCKDNSPID="$DIR/.duckdns.pid"
+if [ -f "$DUCKDNSPID" ]; then
+    pkill -P $(cat "$DUCKDNSPID")
+    kill $(cat "$DUCKDNSPID")
+    rm "$DUCKDNSPID"
 fi
-./freedns-update.sh >/dev/null 2>&1 &
-echo $! > "$FREEDNSPID"
+./duckdns-update.sh >/dev/null 2>&1 &
+echo $! > "$DUCKDNSPID"
 
 # google bot
 
