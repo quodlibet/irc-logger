@@ -67,7 +67,7 @@ for branch in set(QL_BRANCHES + QL_WIN_BRANCHES):
 
     # http://trac.buildbot.net/ticket/2469
     # edit: needed for gitpoller as well?
-    poller.setName(poller.repourl + poller.branch)
+    poller.setName(poller.repourl + branch)
 
     c['change_source'].append(poller)
 
