@@ -53,19 +53,20 @@ c['mergeRequests'] = True
 
 ####### CHANGESOURCES
 
-from buildbot.changes.hgpoller import HgPoller
+from buildbot.changes.gitpoller import GitPoller
 
 
 c['change_source'] = []
 
 for branch in set(QL_BRANCHES + QL_WIN_BRANCHES):
-    poller = HgPoller(
-            repourl='https://code.google.com/p/quodlibet/',
-            workdir='hgpoller-workdir',
+    poller = GitPoller(
+            repourl='https://github.com/quod-libet/quodlibet.git',
+            workdir='gitpoller-workdir',
             branch=branch,
             pollinterval=300)
 
     # http://trac.buildbot.net/ticket/2469
+    # edit: needed for gitpoller as well?
     poller.setName(poller.repourl + poller.branch)
 
     c['change_source'].append(poller)
@@ -224,7 +225,7 @@ c['status'].append(
 ####### PROJECT IDENTITY
 
 c['title'] = "Quod Libet"
-c['titleURL'] = "http://code.google.com/p/quodlibet"
+c['titleURL'] = "https://quodlibet.readthedocs.org"
 c['buildbotURL'] = WEB_URL
 
 ####### DB URL
