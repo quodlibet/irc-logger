@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<img src="static/quodlibet.svg" style="height:4em;float:left;margin:0.4em 0.4em 0 0">
+<img src="{{ url_for('static', filename='quodlibet.svg') }}" style="height:4em;float:left;margin:0.4em 0.4em 0 0">
 
 <p>
 This is the public server of the Quod Libet project. For any 

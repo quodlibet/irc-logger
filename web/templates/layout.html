@@ -4,16 +4,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="static/css/bootstrap.min.css">
-        <link rel="stylesheet" href="static/3.1.1/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
 
         {% if stylesheet %}
             <link rel="stylesheet" href="{{ stylesheet }}">
         {% endif %}
 
-        <script src="static/js/jquery.min.js" ></script>
-        <script src="static/js/bootstrap.min.js"></script>
-        <script src="static/js/FeedEk.js"></script>
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}" ></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     </head>
     <body>
 
@@ -26,7 +25,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/"><img src="static/quodlibet.svg" style="height:1em"> Quod Libet Hub</a>
+      <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='quodlibet.svg') }}" style="height:1em"> Quod Libet Hub</a>
     </div>
 
 
