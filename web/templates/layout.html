@@ -4,15 +4,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="static/3.1.1/css/bootstrap-theme.min.css">
 
         {% if stylesheet %}
             <link rel="stylesheet" href="{{ stylesheet }}">
         {% endif %}
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="static/js/jquery.min.js" ></script>
+        <script src="static/js/bootstrap.min.js"></script>
         <script src="static/js/FeedEk.js"></script>
     </head>
     <body>
@@ -26,7 +26,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/"><img src="http://quodlibet.googlecode.com/hg/quodlibet/quodlibet/images/hicolor/scalable/apps/quodlibet.svg" style="height:1em"> Quod Libet Hub</a>
+      <a class="navbar-brand" href="/"><img src="static/quodlibet.svg" style="height:1em"> Quod Libet Hub</a>
     </div>
 
 
@@ -37,8 +37,8 @@
         <li{% if active == "irc" %} class="active"{% endif %}><a href="/irc/latest.log.html">IRC Logs</a></li>
         <li{% if active == "pypy" %} class="active"{% endif %}><a href="/pypy/latest.log.html">PyPy IRC Logs</a></li>
         <li><a>|</a></li>
-        <li><a href="https://code.google.com/p/quodlibet/source/list">Repo</a></li>
-        <li><a href="https://code.google.com/p/quodlibet/issues/list">Bug Tracker</a></li>
+        <li><a href="https://github.com/quod-libet/quodlibet">Repo</a></li>
+        <li><a href="https://github.com/quod-libet/quodlibet/issues">Bug Tracker</a></li>
         <li><a href="https://groups.google.com/forum/#!forum/quod-libet-development">Mailing List</a></li>
       </ul>
     </div>

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<img src="http://quodlibet.googlecode.com/hg/quodlibet/quodlibet/images/hicolor/scalable/apps/quodlibet.svg" style="height:4em;float:left;margin:0.4em 0.4em 0 0">
+<img src="static/quodlibet.svg" style="height:4em;float:left;margin:0.4em 0.4em 0 0">
 
 <p>
 This is the public server of the Quod Libet project. For any 
@@ -19,23 +19,5 @@ All the code is available on <a href="https://github.com/lazka/quodlibet-continu
     <a class="list-group-item" href="{{ base }}/irc">IRC Logs <span class="badge">{{ base }}/irc</span></a>
 </div>
 
-<h4>Bug Tracker Updates</h4>
-
-<br>
-
-<ul class="list-group">
-    <li class="list-group-item">
-        <div id="divRss"></div>
-    </li>
-</ul>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#divRss').FeedEk({
-            FeedUrl:'https://code.google.com/feeds/p/quodlibet/issueupdates/basic',
-            MaxCount: 10,
-        });
-    });
-</script>
 
 {% endblock %}
