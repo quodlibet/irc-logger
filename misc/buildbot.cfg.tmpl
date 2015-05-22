@@ -60,7 +60,7 @@ c['change_source'] = []
 
 for branch in set(QL_BRANCHES + QL_WIN_BRANCHES):
     poller = GitPoller(
-            repourl='https://github.com/quod-libet/quodlibet.git',
+            repourl='https://github.com/quodlibet/quodlibet.git',
             workdir='gitpoller-workdir',
             branch=branch,
             pollinterval=300)
@@ -119,7 +119,7 @@ for branch in QL_BRANCHES:
 
     test_factory.addStep(
         Git(
-            repourl='https://github.com/quod-libet/quodlibet.git',
+            repourl='https://github.com/quodlibet/quodlibet.git',
             mode='incremental',
             branch=branch,
         )
@@ -167,7 +167,7 @@ for branch in QL_WIN_BRANCHES:
 
     test_factory.addStep(
         Git(
-            repourl='https://github.com/quod-libet/quodlibet.git',
+            repourl='https://github.com/quodlibet/quodlibet.git',
             mode='incremental',
             branch=branch,
         )
