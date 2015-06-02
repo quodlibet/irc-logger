@@ -21,41 +21,17 @@ fi
 ./duckdns-update.sh >/dev/null 2>&1 &
 echo $! > "$DUCKDNSPID"
 
-# google bot
+# irc bot
 
-GOOGLEBOT="$DIR/googlebot/googlecode-irc-bot.py"
-GOOGLEPID="$DIR/.google.pid"
-if [ -f "$GOOGLEPID" ]; then
-    pkill -P $(cat "$GOOGLEPID")
-    kill $(cat "$GOOGLEPID")
-    rm "$GOOGLEPID"
+IRCBOT="$DIR/ircbot.py"
+IRCPID="$DIR/.ircbot.pid"
+if [ -f "$IRCPID" ]; then
+    pkill -P $(cat "$IRCPID")
+    kill $(cat "$IRCPID")
+    rm "$IRCPID"
 fi
-python "$GOOGLEBOT" >/dev/null 2>&1 &
-echo $! > "$GOOGLEPID"
-
-# pypy bot
-
-PYPYBOT="$DIR/pypybot/googlecode-irc-bot.py"
-PYPYPID="$DIR/.pypy.pid"
-if [ -f "$PYPYPID" ]; then
-    pkill -P $(cat "$PYPYPID")
-    kill $(cat "$PYPYPID")
-    rm "$PYPYPID"
-fi
-python "$PYPYBOT" >/dev/null 2>&1 &
-echo $! > "$PYPYPID"
-
-# gtk bot
-
-GTKBOT="$DIR/gtkbot/googlecode-irc-bot.py"
-GTKPID="$DIR/.gtk.pid"
-if [ -f "$GTKPID" ]; then
-    pkill -P $(cat "$GTKPID")
-    kill $(cat "$GTKPID")
-    rm "$GTKPID"
-fi
-python "$GTKBOT" >/dev/null 2>&1 &
-echo $! > "$GTKPID"
+python "$IRCBOT" "$DIR/_irc-logs" >/dev/null 2>&1 &
+echo $! > "$IRCPID"
 
 # web server
 

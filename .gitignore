@@ -1,6 +1,5 @@
 buildbot/*
-googlebot/bot.yaml
-googlebot/irc-logs
+_irc-logs
 web/venv/*
 .*.pid
 main.cfg

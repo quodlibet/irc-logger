@@ -7,8 +7,7 @@ Quod Libet Server
     * Automated builds/tests
     * IRC status messages
 
-* Google IRC bot (https://github.com/jmhobbs/googlecode-irc-bot)
-  for logging and reporting of commits/bug tracker changes
+* IRC bot for logging
 
 * Flask app as entry point & IRC logs formatting using irclog2html
   (https://pypi.python.org/pypi/irclog2html)

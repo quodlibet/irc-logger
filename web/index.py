@@ -30,13 +30,6 @@ def docs():
     return render_template('iframe.html', base=base_url, active="docs",
                             iframe_url=iframe)
 
-@app.route('/ml')
-def bug():
-    base_url = request.url_root.rstrip("/")
-    iframe = "https://groups.google.com/forum/#!forum/quod-libet-development"
-    return render_template('iframe.html', base=base_url, active="ml",
-                            iframe_url=iframe)
-
 
 @app.route('/static/<path:filename>')
 def static_(filename):
@@ -78,34 +71,23 @@ def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
                            base=base_url, active=name)
 
 
-@app.route('/irc/')
-@app.route('/irc/<path:filename>')
-def irc(filename=None):
+IRC_CHANS = {
+    "quodlibet": "#quodlibet@irc.oftc.net",
+    "pypy": "#pypy@irc.freenode.org",
+    "foo": "#gtk+@irc.gnome.org",
+    "pygobject": "#python@irc.gnome.org",
+}
+
+DEFAULT_CHAN = "quodlibet"
+
+@app.route('/irc/<name>/')
+@app.route('/irc/<name>/<path:filename>')
+def irc(name, filename=None):
     this = os.path.abspath(os.path.dirname(__file__))
     irc_dir = os.path.abspath(
-        os.path.join(this, "..", "googlebot", "irc-logs"))
-
-    return irc_logs(irc_dir, "irc", filename)
-
-
-@app.route('/pypy/')
-@app.route('/pypy/<path:filename>')
-def irc_pypy(filename=None):
-    this = os.path.abspath(os.path.dirname(__file__))
-    irc_dir = os.path.abspath(
-        os.path.join(this, "..", "pypybot", "irc-logs"))
-
-    return irc_logs(irc_dir, "pypy", filename)
-
-
-@app.route('/foo/')
-@app.route('/foo/<path:filename>')
-def irc_gtk(filename=None):
-    this = os.path.abspath(os.path.dirname(__file__))
-    irc_dir = os.path.abspath(
-        os.path.join(this, "..", "gtkbot", "irc-logs"))
-
-    return irc_logs(irc_dir, "foo", filename)
+        os.path.join(this, "..", "_irc-logs",
+        IRC_CHANS.get(name, IRC_CHANS[DEFAULT_CHAN])))
+    return irc_logs(irc_dir, name, filename)
 
 
 @app.route('/robots.txt')
