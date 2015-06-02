@@ -25,38 +25,14 @@ fi
 
 # google bot
 
-GOOGLEPID="$DIR/.google.pid"
-if [ -f "$GOOGLEPID" ]; then
-    pkill -P $(cat "$GOOGLEPID")
-    kill $(cat "$GOOGLEPID")
-    echo "sent SIGTERM to googlebot process"
-    rm "$GOOGLEPID"
+IRCPID="$DIR/.ircbot.pid"
+if [ -f "$IRCPID" ]; then
+    pkill -P $(cat "$IRCPID")
+    kill $(cat "$IRCPID")
+    echo "sent SIGTERM to irc process"
+    rm "$IRCPID"
 else
-    echo "google bot not running"
-fi
-
-# pypy bot
-
-PYPYPID="$DIR/.pypy.pid"
-if [ -f "$PYPYPID" ]; then
-    pkill -P $(cat "$PYPYPID")
-    kill $(cat "$PYPYPID")
-    echo "sent SIGTERM to pypybot process"
-    rm "$PYPYPID"
-else
-    echo "pypy bot not running"
-fi
-
-# gtk bot
-
-GTKPID="$DIR/.gtk.pid"
-if [ -f "$GTKPID" ]; then
-    pkill -P $(cat "$GTKPID")
-    kill $(cat "$GTKPID")
-    echo "sent SIGTERM to gtkbot process"
-    rm "$GTKPID"
-else
-    echo "gtk bot not running"
+    echo "irc logger not running"
 fi
 
 # web server
