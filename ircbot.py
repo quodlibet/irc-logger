@@ -119,6 +119,9 @@ class IRCBot(irc.IRCClient):
     def userRenamed(self, oldname, newname):
         self._logger.nick_change(oldname, newname)
 
+    def privmsg(self, user, channel, msg):
+        self._logger.message(user, msg)
+
 
 class IRCBotFactory(protocol.ReconnectingClientFactory):
 
