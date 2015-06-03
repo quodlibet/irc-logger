@@ -70,6 +70,9 @@ class IRCLogger(object):
     def quit(self, user, message):
         self.log("[%s quit (%s)]" % (user, message))
 
+    def message(self, user, message):
+        self.log("<%s> %s" % (user, message))
+
     def action(self, user, message):
         user = user.split('!')
         self.log("[* %s %s]" % (user[0], message))
