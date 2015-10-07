@@ -14,10 +14,8 @@ IRC_SERVER = "%IRC_SERVER%"
 IRC_CHAN = "%IRC_CHAN%"
 IRC_NICK = "utahraptor"
 
-QL_BRANCHES = ["master", "quodlibet-3.3", "quodlibet-3.2",
-               "quodlibet-2.6", "quodlibet-3.4"]
-QL_WIN_BRANCHES = ["master", "quodlibet-3.2",
-                   "quodlibet-3.3", "quodlibet-3.4"]
+QL_BRANCHES = ["master", "quodlibet-3.3", "quodlibet-3.4", "quodlibet-3.5"]
+QL_WIN_BRANCHES = ["master", "quodlibet-3.3", "quodlibet-3.4", "quodlibet-3.5"]
 
 ####### HELPERS
 
@@ -132,13 +130,6 @@ for branch in QL_BRANCHES:
     test_factory.addStep(ShellCommand(
         command=["xvfb-run", "-a", "python", "quodlibet/setup.py", "test"],
         description=["main tests"]))
-
-    # some fail for non obvious reasons on this setup only..
-    if branch != "quodlibet-2.6":
-        test_factory.addStep(ShellCommand(
-            command=["xvfb-run", "-a", "python", "quodlibet/setup.py", "test",
-                     "--suite", "plugin"],
-            description=["plugin tests"]))
 
     # different pep8/pyflakes versions are annoying.. do manual testing
     #test_factory.addStep(ShellCommand(
