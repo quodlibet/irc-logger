@@ -41,7 +41,7 @@ def static_(filename):
 def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
 
     if filename is None:
-        return redirect("/%s/index.html" % name)
+        return redirect("/irc/%s/index.html" % name)
 
     if not filename.endswith(".html"):
         return send_from_directory(irc_dir, filename)
