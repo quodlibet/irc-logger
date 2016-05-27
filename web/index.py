@@ -49,12 +49,20 @@ def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
     update_needed = False
     # do our own mtime check here as well since calling logs2html is expensive
     # even if it does nothing
+    logs = []
     for file_ in os.listdir(irc_dir):
-        path = os.path.join(irc_dir, file_)
+        if file_.endswith(".log"):
+            logs.append(file_)
+
+    logs.sort()
+    if logs:
+        path = os.path.join(irc_dir, logs[-1])
         mtime = os.path.getmtime(path)
         if mtime > dir_mtime.get(irc_dir, -1):
             dir_mtime[irc_dir] = mtime
             update_needed = True
+    else:
+        update_needed = True
 
     if update_needed:
         # update html logs first
