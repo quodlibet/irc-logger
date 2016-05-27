@@ -1,5 +1,5 @@
 import os
-import subprocess
+import shutil
 
 from flask import Flask, render_template
 from flask import redirect, send_from_directory, request, Response
@@ -38,7 +38,22 @@ def static_(filename):
     return send_from_directory(static_path, filename)
 
 
-def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
+def get_year(filename):
+    if "_" not in filename:
+        return ""
+    return filename.split("_", 1)[-1].split("-", 1)[0]
+
+
+def logs2html(dir_):
+    import irclog2html.logs2html
+
+    try:
+        irclog2html.logs2html.main(["logs2html", dir_])
+    except SystemExit:
+        pass
+
+
+def irc_logs(irc_dir, name, filename=None):
 
     if filename is None:
         return redirect("/irc/%s/index.html" % name)
@@ -46,22 +61,26 @@ def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
     if not filename.endswith(".html"):
         return send_from_directory(irc_dir, filename)
 
-    update_needed = False
-    # do our own mtime check here as well since calling logs2html is expensive
-    # even if it does nothing
-    for file_ in os.listdir(irc_dir):
-        path = os.path.join(irc_dir, file_)
-        mtime = os.path.getmtime(path)
-        if mtime > dir_mtime.get(irc_dir, -1):
-            dir_mtime[irc_dir] = mtime
-            update_needed = True
+    old_dir = os.path.join(irc_dir, "old")
 
-    if update_needed:
-        # update html logs first
-        try:
-            subprocess.call(["logs2html", irc_dir])
-        except OSError:
-            pass
+    try:
+        os.mkdir(old_dir)
+    except OSError:
+        pass
+
+    new_old = False
+    for filename in os.listdir(irc_dir):
+        year = get_year(filename)
+        if not year:
+            continue
+        if int(year) <= 2015:
+            shutil.move(os.path.join(irc_dir, filename), old_dir)
+            new_old = True
+
+    if new_old:
+        logs2html(old_dir)
+
+    logs2html(irc_dir)
 
     path = os.path.join(irc_dir, filename)
     data = open(path, "rb").read().decode("utf-8")
