@@ -2,11 +2,6 @@
 Quod Libet Server
 =================
 
-* Buildbot setup (http://buildbot.net/)
-
-    * Automated builds/tests
-    * IRC status messages
-
 * IRC bot for logging
 
 * Flask app as entry point & IRC logs formatting using irclog2html

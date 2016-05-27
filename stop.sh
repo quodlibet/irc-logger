@@ -2,15 +2,6 @@
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
-# buildbot
-
-BUILDBOT="$DIR/buildbot"
-MASTER="$BUILDBOT/master"
-SLAVE="$BUILDBOT/slave"
-
-buildslave stop "$SLAVE"
-buildbot stop "$MASTER"
-
 # duckdns updater
 
 DUCKDNSPID="$DIR/.duckdns.pid"
@@ -23,7 +14,7 @@ else
     echo "duckdns updater not running"
 fi
 
-# google bot
+# irc bot
 
 IRCPID="$DIR/.ircbot.pid"
 if [ -f "$IRCPID" ]; then

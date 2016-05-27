@@ -1,7 +1,4 @@
 [config]
 
-BB_WEB_UNAME=foobar
-BB_WEB_PSWD=foobar
-
 DUCKDNS_DOMAIN=quodlibet
 DUCKDNS_TOKEN=xxx-xxx-xxx-xxx

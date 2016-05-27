@@ -8,7 +8,7 @@ if [ -d "$VENV" ]; then
   exit 1
 fi
 
-sudo apt-get install python-virtualenv
+sudo apt-get install python-virtualenv python-twisted
 
 virtualenv "$VENV"
 source "$VENV/bin/activate"

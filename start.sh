@@ -2,14 +2,6 @@
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
-# buildbot
-
-BUILDBOT="$DIR/buildbot"
-MASTER="$BUILDBOT/master"
-SLAVE="$BUILDBOT/slave"
-buildbot restart "$MASTER"
-buildslave restart "$SLAVE"
-
 # duckdns updater
 
 DUCKDNSPID="$DIR/.duckdns.pid"
