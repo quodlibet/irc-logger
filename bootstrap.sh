@@ -8,16 +8,23 @@ if [ -d "$VENV" ]; then
   exit 1
 fi
 
-sudo apt-get install python-virtualenv python-twisted
+sudo apt update
 
-virtualenv "$VENV"
+sudo apt install python-dev python-virtualenv python-twisted python-flask python-tornado
+
+virtualenv --system-site-packages "$VENV"
 source "$VENV/bin/activate"
 pip install irclog2html
-pip install flask
-pip install tornado
+
+# firewall
+sudo apt install ufw
+sudo ufw reset --force
+sudo ufw allow from 192.168.0.0/24 to any port 22
+sudo ufw allow 80/tcp
+sudo ufw enable
 
 # allow us to bind to port 80
-sudo apt-get install authbind
+sudo apt install authbind
 sudo touch /etc/authbind/byport/80
 sudo chown "$USER" /etc/authbind/byport/80
 sudo chmod 755 /etc/authbind/byport/80
