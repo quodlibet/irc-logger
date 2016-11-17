@@ -36,4 +36,3 @@ if [ -f "$WEBPID" ]; then
 fi
 authbind python "$WEBAPP" >/dev/null 2>&1 &
 echo $! > "$WEBPID"
-deactivate
