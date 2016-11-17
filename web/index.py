@@ -72,7 +72,11 @@ def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
             pass
 
     path = os.path.join(irc_dir, filename)
-    data = open(path, "rb").read().decode("utf-8")
+    try:
+        with open(path, "rb") as h:
+            data = h.read().decode("utf-8")
+    except IOError:
+        data = u""
     data = data[data.find("<body>") + 6:data.find("</body")]
     base_url = request.url_root.rstrip("/")
     return render_template('irc.html', content=data, stylesheet="irclog.css",
@@ -107,13 +111,11 @@ Disallow: /
 
 
 if __name__ == '__main__':
+    from twisted.internet import reactor
+    from twisted.web.server import Site
+    from twisted.web.wsgi import WSGIResource
 
-    #app.run(host='0.0.0.0', port=80, use_reloader=False, debug=True)
-
-    from tornado.wsgi import WSGIContainer
-    from tornado.httpserver import HTTPServer
-    from tornado.ioloop import IOLoop
-
-    http_server = HTTPServer(WSGIContainer(app))
-    http_server.listen(80)
-    IOLoop.instance().start()
+    wsgiResource = WSGIResource(reactor, reactor.getThreadPool(), app)
+    site = Site(wsgiResource)
+    reactor.listenTCP(80, site)
+    reactor.run()

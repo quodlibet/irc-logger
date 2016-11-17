@@ -28,14 +28,12 @@ echo $! > "$IRCPID"
 # web server
 
 WEBAPP="$DIR/web/index.py"
-WEBVENV="$DIR/web/venv"
 WEBPID="$DIR/.web.pid"
 if [ -f "$WEBPID" ]; then
     pkill -P $(cat "$WEBPID")
     kill $(cat "$WEBPID")
     rm "$WEBPID"
 fi
-source "$WEBVENV/bin/activate"
 authbind python "$WEBAPP" >/dev/null 2>&1 &
 echo $! > "$WEBPID"
 deactivate

@@ -10,11 +10,7 @@ fi
 
 sudo apt update
 
-sudo apt install python-dev python-virtualenv python-twisted python-flask python-tornado
-
-virtualenv --system-site-packages "$VENV"
-source "$VENV/bin/activate"
-pip install irclog2html
+sudo apt install python-virtualenv python-twisted python-flask
 
 # firewall
 sudo apt install ufw
