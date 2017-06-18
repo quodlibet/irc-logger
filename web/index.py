@@ -67,7 +67,10 @@ def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
     if update_needed:
         # update html logs first
         try:
-            subprocess.call(["logs2html", irc_dir])
+            subprocess.call(
+                ["python3", "-c",
+                 "from irclog2html.logs2html import main; main()",
+                 irc_dir])
         except OSError:
             pass
 
