@@ -91,6 +91,7 @@ IRC_CHANS = {
     "pypy": "#pypy@irc.freenode.org",
     "foo": "#gtk+@irc.gnome.org",
     "pygobject": "#python@irc.gnome.org",
+    "bar": "#gnome-hackers@irc.gnome.org",
 }
 
 DEFAULT_CHAN = "quodlibet"
