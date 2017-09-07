@@ -112,14 +112,3 @@ def robots():
 User-agent: *
 Disallow: /
 """, mimetype="text/plain")
-
-
-if __name__ == '__main__':
-    from twisted.internet import reactor
-    from twisted.web.server import Site
-    from twisted.web.wsgi import WSGIResource
-
-    wsgiResource = WSGIResource(reactor, reactor.getThreadPool(), app)
-    site = Site(wsgiResource)
-    reactor.listenTCP(80, site)
-    reactor.run()

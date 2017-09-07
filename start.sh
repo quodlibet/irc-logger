@@ -27,12 +27,12 @@ echo $! > "$IRCPID"
 
 # web server
 
-WEBAPP="$DIR/web/index.py"
+WEBAPP="$DIR/run.py"
 WEBPID="$DIR/.web.pid"
 if [ -f "$WEBPID" ]; then
     pkill -P $(cat "$WEBPID")
     kill $(cat "$WEBPID")
     rm "$WEBPID"
 fi
-authbind python "$WEBAPP" >/dev/null 2>&1 &
+authbind python3 "$WEBAPP" 80 >/dev/null 2>&1 &
 echo $! > "$WEBPID"

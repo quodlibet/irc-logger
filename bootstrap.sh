@@ -1,16 +1,6 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "$0" )" && pwd )"
-VENV="$DIR/web/venv"
-
-if [ -d "$VENV" ]; then
-  echo "ERROR: $VENV exists"
-  exit 1
-fi
-
 sudo apt update
-
-sudo apt install python-virtualenv python-twisted python-flask
 
 # firewall
 sudo apt install ufw
@@ -24,3 +14,6 @@ sudo apt install authbind
 sudo touch /etc/authbind/byport/80
 sudo chown "$USER" /etc/authbind/byport/80
 sudo chmod 755 /etc/authbind/byport/80
+
+# web deps
+sudo apt install python-twisted python-flask python3-twisted python3-flask
