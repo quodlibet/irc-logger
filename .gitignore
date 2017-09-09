@@ -4,3 +4,4 @@ web/venv/*
 .*.pid
 main.cfg
 *.pyc
+msys2_web

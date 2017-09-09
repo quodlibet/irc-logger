@@ -18,3 +18,8 @@ sudo chmod 755 /etc/authbind/byport/80
 # web deps
 sudo apt install python-twisted python-flask python3-twisted python3-flask \
     irclog2html python3-requests python-requests
+
+sudo apt install git
+
+rm -Rf msys2_web
+git clone https://github.com/lazka/msys2-web.git msys2_web
