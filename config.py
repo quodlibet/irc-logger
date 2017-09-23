@@ -1,42 +1,24 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
-"""
-Returns a config value for a config key or if the first argument
-is a valid file replaces all %KEY% with the right value and
-prints the replaced file content to stdout.
-"""
-
-import ConfigParser
+import configparser
 import sys
 import os
 
 
 def main(argv):
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     current = os.path.dirname(os.path.realpath(__file__))
     config_path = os.path.join(current, "main.cfg")
-    if not os.path.exists(config_path):
-        print >> sys.stderr, "ERROR: main.cfg not found!"
-        return 1
+    assert os.path.exists(config_path)
     config.read(config_path)
 
     values = {}
     for option in config.options("config"):
         values[option.upper()] = config.get("config", option)
 
-    arg = argv[1]
-    if not os.path.exists(arg):
-        sys.stdout.write(values.get(arg, ""))
-        exit()
-
-    with open(arg, "rb") as h:
-        data = h.read()
-
-        for key, value in values.items():
-            data = data.replace("%%%s%%" % key, value)
-
-    print data
+    print(config.get("config", argv[1]), end="", flush=True)
+    return 0
 
 
 if __name__ == "__main__":
-    exit(main(sys.argv))
+    sys.exit(main(sys.argv))
