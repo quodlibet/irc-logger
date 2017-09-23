@@ -16,8 +16,7 @@ sudo chown "$USER" /etc/authbind/byport/80
 sudo chmod 755 /etc/authbind/byport/80
 
 # web deps
-sudo apt install python-twisted python-flask python3-twisted python3-flask \
-    irclog2html python3-requests python-requests
+sudo apt install python3-twisted python3-flask irclog2html python3-requests
 
 sudo apt install git
 

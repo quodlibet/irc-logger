@@ -1,5 +1,4 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
 import sys
 import os
@@ -25,6 +24,7 @@ BOTS = [
     Bot("marvin", "#gnome-hackers", "irc.gnome.org", 6667),
     Bot("marvin", "#python", "irc.gnome.org", 6667),
     Bot("marvin", "#quodlibet", "irc.oftc.net", 6667),
+    Bot("marvin", "#msys2", "irc.oftc.net", 6667),
 ]
 
 
@@ -39,7 +39,8 @@ class IRCLogger(object):
             os.makedirs(os.path.dirname(self._get_log_file_path()))
         except OSError:
             pass
-        self.file = open(self._get_log_file_path(), "a")
+        self.file = open(self._get_log_file_path(), "a",
+                         encoding="utf-8", errors="replace")
 
     def _date_key(self):
         return time.strftime("%Y-%m-%d", time.localtime(time.time()))
@@ -53,7 +54,8 @@ class IRCLogger(object):
         if self._date != self._date_key():
             self.file.close()
             self._date = self._date_key()
-            self.file = open(self._get_log_file_path(), "a")
+            self.file = open(self._get_log_file_path(), "a",
+                             encoding="utf-8", errors="replace")
         self.file.write('%s %s\n' % (
             time.strftime("[%H:%M:%S]", time.localtime(time.time())), message)
         )
@@ -140,6 +142,7 @@ class IRCBotFactory(protocol.ReconnectingClientFactory):
 
 
 def main(argv):
+    assert sys.version_info[0] == 3
 
     log_dir = argv[1]
     if not os.path.exists(log_dir):
