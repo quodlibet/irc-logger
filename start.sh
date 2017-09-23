@@ -13,18 +13,6 @@ fi
 ./duckdns-update.sh >/dev/null 2>&1 &
 echo $! > "$DUCKDNSPID"
 
-# irc bot
-
-IRCBOT="$DIR/ircbot.py"
-IRCPID="$DIR/.ircbot.pid"
-if [ -f "$IRCPID" ]; then
-    pkill -P $(cat "$IRCPID")
-    kill $(cat "$IRCPID")
-    rm "$IRCPID"
-fi
-python "$IRCBOT" "$DIR/_irc-logs" >/dev/null 2>&1 &
-echo $! > "$IRCPID"
-
 # web server
 
 WEBAPP="$DIR/run.py"
@@ -34,5 +22,5 @@ if [ -f "$WEBPID" ]; then
     kill $(cat "$WEBPID")
     rm "$WEBPID"
 fi
-authbind python3 "$WEBAPP" 80 >/dev/null 2>&1 &
+authbind python3 "$WEBAPP" 80 --irc >/dev/null 2>&1 &
 echo $! > "$WEBPID"

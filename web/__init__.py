@@ -50,7 +50,12 @@ def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
     # do our own mtime check here as well since calling logs2html is expensive
     # even if it does nothing
     logs = []
-    for file_ in os.listdir(irc_dir):
+    try:
+        entries = os.listdir(irc_dir)
+    except OSError:
+        entries = []
+
+    for file_ in entries:
         if file_.endswith(".log"):
             logs.append(file_)
 
@@ -88,6 +93,7 @@ def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
 
 IRC_CHANS = {
     "quodlibet": "#quodlibet@irc.oftc.net",
+    "msys2": "#msys2@irc.oftc.net",
     "pypy": "#pypy@irc.freenode.org",
     "foo": "#gtk+@irc.gnome.org",
     "pygobject": "#python@irc.gnome.org",

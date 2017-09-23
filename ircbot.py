@@ -4,7 +4,6 @@ import sys
 import os
 import time
 
-from twisted.python import log
 from twisted.words.protocols import irc
 from twisted.internet import reactor, protocol
 
@@ -141,22 +140,24 @@ class IRCBotFactory(protocol.ReconnectingClientFactory):
         return IRCBot(self, bot.nickname, bot.channel, logger)
 
 
-def main(argv):
-    assert sys.version_info[0] == 3
+def setup():
+    log_dir = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "_irc-logs")
 
-    log_dir = argv[1]
-    if not os.path.exists(log_dir):
-        try:
-            os.makedirs(log_dir)
-        except OSError:
-            pass
+    try:
+        os.makedirs(log_dir)
+    except OSError:
+        pass
     assert os.path.isdir(log_dir)
-    log.startLogging(sys.stdout)
 
     for bot in BOTS:
         factory = IRCBotFactory(bot, log_dir)
         reactor.connectTCP(bot.server, bot.port, factory)
 
+
+def main(argv):
+    assert sys.version_info[0] == 3
+    setup()
     reactor.run()
 
 
