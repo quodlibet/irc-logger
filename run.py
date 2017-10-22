@@ -35,7 +35,7 @@ def main(argv):
         os.mkdir("_certs")
     except OSError:
         pass
-    pem_path = os.path.join("_certs", "quodlibet.duckdns.pem")
+    pem_path = os.path.join("_certs", "quodlibet.duckdns.org.pem")
     if not os.path.exists(pem_path):
         open(pem_path, "wb").close()
 

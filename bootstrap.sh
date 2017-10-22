@@ -14,13 +14,16 @@ sudo apt install authbind
 sudo touch /etc/authbind/byport/80
 sudo chown "$USER" /etc/authbind/byport/80
 sudo chmod 755 /etc/authbind/byport/80
+sudo touch /etc/authbind/byport/443
+sudo chown "$USER" /etc/authbind/byport/443
+sudo chmod 755 /etc/authbind/byport/443
 
 # web deps
 sudo apt install python3-twisted python3-flask irclog2html python3-requests
 
-sudo apt install git
+sudo apt install git python3-pip libffi-dev libssl-dev python3-pycparser
 
-pip3 install --user txacme
+pip3 install --upgrade-strategy "only-if-needed" --user txacme
 
 rm -Rf msys2_web
 git clone https://github.com/lazka/msys2-web.git msys2_web
