@@ -22,5 +22,5 @@ if [ -f "$WEBPID" ]; then
     kill $(cat "$WEBPID")
     rm "$WEBPID"
 fi
-authbind python3 "$WEBAPP" 80 --irc >/dev/null 2>&1 &
+authbind python3 "$WEBAPP" 80 442 --irc >/dev/null 2>&1 &
 echo $! > "$WEBPID"
