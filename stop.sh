@@ -14,18 +14,6 @@ else
     echo "duckdns updater not running"
 fi
 
-# irc bot
-
-IRCPID="$DIR/.ircbot.pid"
-if [ -f "$IRCPID" ]; then
-    pkill -P $(cat "$IRCPID")
-    kill $(cat "$IRCPID")
-    echo "sent SIGTERM to irc process"
-    rm "$IRCPID"
-else
-    echo "irc logger not running"
-fi
-
 # web server
 
 WEBPID="$DIR/.web.pid"
