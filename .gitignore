@@ -5,3 +5,5 @@ web/venv/*
 main.cfg
 *.pyc
 msys2_web
+*.key
+*.pem

@@ -20,5 +20,7 @@ sudo apt install python3-twisted python3-flask irclog2html python3-requests
 
 sudo apt install git
 
+pip3 install --user txacme
+
 rm -Rf msys2_web
 git clone https://github.com/lazka/msys2-web.git msys2_web
