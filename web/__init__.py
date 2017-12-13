@@ -94,9 +94,9 @@ def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
 IRC_CHANS = {
     "quodlibet": "#quodlibet@irc.oftc.net",
     "pypy": "#pypy@irc.freenode.org",
-    "foo": "#gtk+@irc.eagle.y.se",
-    "pygobject": "#python@irc.eagle.y.se",
-    "bar": "#gnome-hackers@irc.eagle.y.se",
+    "foo": "#gtk+@irc.gnome.org",
+    "pygobject": "#python@irc.gnome.org",
+    "bar": "#gnome-hackers@irc.gnome.org",
 }
 
 DEFAULT_CHAN = "quodlibet"
