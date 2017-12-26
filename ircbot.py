@@ -128,6 +128,8 @@ class IRCBot(irc.IRCClient):
         self._logger.message(user, msg)
 
     def noticed(self, user, channel, msg):
+        if channel != self._channel:
+            return
         self._logger.action(user, msg)
 
 class IRCBotFactory(protocol.ReconnectingClientFactory):
