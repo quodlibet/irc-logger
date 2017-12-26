@@ -127,6 +127,8 @@ class IRCBot(irc.IRCClient):
     def privmsg(self, user, channel, msg):
         self._logger.message(user, msg)
 
+    def noticed(self, user, channel, msg):
+        self._logger.action(user, msg)
 
 class IRCBotFactory(protocol.ReconnectingClientFactory):
 
