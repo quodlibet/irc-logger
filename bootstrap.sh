@@ -5,7 +5,7 @@ sudo apt update
 # firewall
 sudo apt install ufw
 sudo ufw reset --force
-sudo ufw allow from 192.168.0.0/24 to any port 22
+sudo ufw allow ssh
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw enable
@@ -20,7 +20,8 @@ sudo chown "$USER" /etc/authbind/byport/443
 sudo chmod 755 /etc/authbind/byport/443
 
 # web deps
-sudo apt install python3-twisted python3-flask irclog2html python3-requests
+sudo apt install python3-twisted python3-flask irclog2html python3-requests \
+    python3-setuptools libpython3-all-dev
 
 sudo apt install git python3-pip libffi-dev libssl-dev python3-pycparser
 
