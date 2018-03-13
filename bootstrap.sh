@@ -21,7 +21,7 @@ sudo chmod 755 /etc/authbind/byport/443
 
 # web deps
 sudo apt install python3-twisted python3-flask irclog2html python3-requests \
-    python3-setuptools libpython3-all-dev
+    python3-setuptools libpython3-all-dev python3-wheel curl
 
 sudo apt install git python3-pip libffi-dev libssl-dev python3-pycparser
 
