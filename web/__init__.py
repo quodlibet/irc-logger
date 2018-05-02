@@ -15,22 +15,6 @@ def index():
     return render_template('index.html', base=base_url)
 
 
-@app.route('/buildbot')
-def buildbot():
-    base_url = request.url_root.rstrip("/")
-    iframe = "%s:8010/builders" % base_url
-    return render_template('iframe.html', base=base_url, active="buildbot",
-                            iframe_url=iframe)
-
-
-@app.route('/docs')
-def docs():
-    base_url = request.url_root.rstrip("/")
-    iframe = "https://quodlibet.readthedocs.org/en/latest/"
-    return render_template('iframe.html', base=base_url, active="docs",
-                            iframe_url=iframe)
-
-
 @app.route('/static/<path:filename>')
 def static_(filename):
     this = os.path.abspath(os.path.dirname(__file__))
