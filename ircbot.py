@@ -16,6 +16,7 @@ class Bot(object):
         self.server = server
         self.port = port
 
+KEEP_DAYS = 7
 
 BOTS = [
     Bot("marvin", "#pypy", "irc.freenode.org", 6667),
@@ -49,10 +50,24 @@ class IRCLogger(object):
             self._path, "%s@%s" % (self._channel, self._server),
             self._channel.lstrip("#") + "_" + self._date + ".log")
 
+    def _cleanup_logs(self):
+        logs = []
+        for name in os.listdir(self._path):
+            if name.endswith(".log"):
+                logs.append(name)
+        logs = sorted(logs)
+        for name in logs[:-KEEP_DAYS]:
+            os.unlink(os.path.join(self._path, name))
+            try:
+                os.unlink(os.path.join(self._path, name + ".html"))
+            except OSError:
+                pass
+
     def log(self, message):
         if self._date != self._date_key():
             self.file.close()
             self._date = self._date_key()
+            self._cleanup_logs()
             self.file = open(self._get_log_file_path(), "a",
                              encoding="utf-8", errors="replace")
         self.file.write('%s %s\n' % (
