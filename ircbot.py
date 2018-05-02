@@ -47,19 +47,24 @@ class IRCLogger(object):
 
     def _get_log_file_path(self):
         return os.path.join(
-            self._path, "%s@%s" % (self._channel, self._server),
+            self._get_log_file_dir(),
             self._channel.lstrip("#") + "_" + self._date + ".log")
 
+    def _get_log_file_dir(self):
+        return os.path.join(
+            self._path, "%s@%s" % (self._channel, self._server))
+
     def _cleanup_logs(self):
+        dir_ = self._get_log_file_dir()
         logs = []
-        for name in os.listdir(self._path):
+        for name in os.listdir(dir_):
             if name.endswith(".log"):
                 logs.append(name)
         logs = sorted(logs)
         for name in logs[:-KEEP_DAYS]:
-            os.unlink(os.path.join(self._path, name))
+            os.unlink(os.path.join(dir_, name))
             try:
-                os.unlink(os.path.join(self._path, name + ".html"))
+                os.unlink(os.path.join(dir_, name + ".html"))
             except OSError:
                 pass
 
@@ -67,13 +72,13 @@ class IRCLogger(object):
         if self._date != self._date_key():
             self.file.close()
             self._date = self._date_key()
-            self._cleanup_logs()
             self.file = open(self._get_log_file_path(), "a",
                              encoding="utf-8", errors="replace")
         self.file.write('%s %s\n' % (
             time.strftime("[%H:%M:%S]", time.localtime(time.time())), message)
         )
         self.file.flush()
+        self._cleanup_logs()
 
     def close(self):
         self.file.close()
