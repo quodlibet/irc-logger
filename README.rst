@@ -15,6 +15,3 @@ HOWTO
 
 * Fill out usernames and passwords in  ``main.cfg``
 * Call all ``bootstrap-*.sh`` scripts
-* Call ``start.sh``
-* Call ``stop.sh`` to stop all services or ``start.sh`` to restart them
-* Call ``reconfig.sh`` to rewrite config files, needs restart afterwards.
