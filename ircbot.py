@@ -16,7 +16,7 @@ class Bot(object):
         self.server = server
         self.port = port
 
-KEEP_DAYS = 5
+KEEP_DAYS = 3
 
 BOTS = [
     Bot("marvin", "#pypy", "irc.freenode.org", 6667),
