@@ -16,9 +16,6 @@ from ircbot import setup
 def main(argv):
     assert sys.version_info[0] == 3
 
-    msys2_app.config["IRC_LOGS_PATH"] = \
-        os.path.join("_irc-logs", "#msys2@irc.oftc.net")
-
     final_app = DispatcherMiddleware(app, {
         "/msys2": msys2_app,
     })
