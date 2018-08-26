@@ -23,6 +23,7 @@ def static_(filename):
 
 
 @app.route('/msys2')
+@app.route('/msys2/')
 @app.route('/msys2/<path>')
 def msys2(path=''):
     return redirect('https://msys2.duckdns.org/' + path, code=302)
