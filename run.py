@@ -1,45 +1,34 @@
 import sys
-import os
+import argparse
 
-from werkzeug.wsgi import DispatcherMiddleware
 from twisted.internet import reactor
 from twisted.web.server import Site
 from twisted.web.wsgi import WSGIResource
 from twisted.python import log
-from twisted.internet.endpoints import serverFromString
 
 from web import app
-from msys2_web.main import app as msys2_app
 from ircbot import setup
 
 
 def main(argv):
     assert sys.version_info[0] == 3
 
-    final_app = DispatcherMiddleware(app, {
-        "/msys2": msys2_app,
-    })
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--port", type=int, default=8160,
+                        help="port number")
+    parser.add_argument("-d", "--debug", action="store_true")
+    parser.add_argument("-i", "--irc", action="store_true")
+    args = parser.parse_args()
 
-    http_port, https_port = int(argv[1]), int(argv[2])
+    if args.debug:
+        app.debug = True
+        log.startLogging(sys.stdout)
 
-    log.startLogging(sys.stdout)
-    wsgiResource = WSGIResource(reactor, reactor.getThreadPool(), final_app)
+    wsgiResource = WSGIResource(reactor, reactor.getThreadPool(), app)
     site = Site(wsgiResource)
-    endpoint = serverFromString(reactor, "tcp:%d" % http_port)
-    endpoint.listen(site)
+    reactor.listenTCP(args.port, site)
 
-    try:
-        os.mkdir("_certs")
-    except OSError:
-        pass
-    pem_path = os.path.join("_certs", "quodlibet.duckdns.org.pem")
-    if not os.path.exists(pem_path):
-        open(pem_path, "wb").close()
-
-    endpoint = serverFromString(reactor, "le:_certs:tcp:%d" % https_port)
-    endpoint.listen(site)
-
-    if "--irc" in argv[1:]:
+    if args.irc:
         setup()
     reactor.run()
 

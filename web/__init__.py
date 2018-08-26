@@ -22,6 +22,12 @@ def static_(filename):
     return send_from_directory(static_path, filename)
 
 
+@app.route('/msys2')
+@app.route('/msys2/<path>')
+def msys2(path=''):
+    return redirect('https://msys2.duckdns.org/' + path, code=302)
+
+
 def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
 
     if filename is None:
