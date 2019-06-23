@@ -15,20 +15,6 @@ def index():
     return render_template('index.html', base=base_url)
 
 
-@app.route('/static/<path:filename>')
-def static_(filename):
-    this = os.path.abspath(os.path.dirname(__file__))
-    static_path = os.path.join(this, "static")
-    return send_from_directory(static_path, filename)
-
-
-@app.route('/msys2')
-@app.route('/msys2/')
-@app.route('/msys2/<path:page>')
-def msys2(page=''):
-    return redirect('https://msys2.duckdns.org/' + page, code=302)
-
-
 def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
 
     if filename is None:
