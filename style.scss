@@ -3,10 +3,6 @@ $enable-responsive-font-sizes: true;
 @import './node_modules/bootstrap/scss/bootstrap';
 
 @include media-breakpoint-down(lg) {
-    html {
-        font-size: 0.9em;
-    }
-
     .container {
         max-width: initial;
     }
@@ -14,6 +10,6 @@ $enable-responsive-font-sizes: true;
 
 @include media-breakpoint-down(sm) {
     html {
-        font-size: 0.8em;
+        font-size: 0.9em;
     }
 }
