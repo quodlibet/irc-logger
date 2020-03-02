@@ -1,6 +1,6 @@
-=================
-Quod Libet Server
-=================
+=====================
+IRC Logger and Viewer
+=====================
 
 * IRC bot for logging
 

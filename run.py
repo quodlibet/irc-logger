@@ -17,7 +17,7 @@ def main(argv):
     parser.add_argument("-p", "--port", type=int, default=8160,
                         help="port number")
     parser.add_argument("-d", "--debug", action="store_true")
-    parser.add_argument("-i", "--irc", action="store_true")
+    parser.add_argument("-c", "--connect", action="store_true")
     args = parser.parse_args()
 
     if args.debug:
@@ -28,7 +28,7 @@ def main(argv):
     site = Site(wsgiResource)
     reactor.listenTCP(args.port, site)
 
-    if args.irc:
+    if args.connect:
         setup()
     reactor.run()
 
