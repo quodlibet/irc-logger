@@ -20,9 +20,6 @@ KEEP_DAYS = 3
 
 BOTS = [
     Bot("marvin", "#pypy", "irc.freenode.org", 6667),
-    Bot("marvin", "#gtk", "irc.gnome.org", 6667),
-    Bot("marvin", "#gnome-hackers", "irc.gnome.org", 6667),
-    Bot("marvin", "#python", "irc.gnome.org", 6667),
     Bot("marvin", "#quodlibet", "irc.oftc.net", 6667),
     Bot("marvin", "#qownnotes", "irc.freenode.org", 6667),
 ]
