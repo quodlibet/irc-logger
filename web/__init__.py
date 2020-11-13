@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 
 from flask import Flask, render_template
@@ -50,7 +51,7 @@ def irc_logs(irc_dir, name, filename=None, dir_mtime={}):
         # update html logs first
         try:
             subprocess.call(
-                ["python3", "-c",
+                [sys.executable, "-c",
                  "from irclog2html.logs2html import main; main()",
                  irc_dir])
         except OSError:
