@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM ubuntu:focal as build
 
 RUN apt-get update && apt-get install -y \
     python3 \
@@ -10,7 +10,19 @@ RUN python3 -m pip install "poetry==1.1.4"
 
 COPY . /app
 WORKDIR /app
+RUN poetry config virtualenvs.in-project true
 RUN poetry install --no-dev
+
+FROM ubuntu:focal
+
+COPY --from=build /app /app
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    && rm -rf /var/lib/apt/lists/*
+
 VOLUME /app/_irc-logs
-ENTRYPOINT ["poetry", "run", "python", "run.py", "-p", "80"]
+WORKDIR /app
+ENV PATH="/app/.venv/bin:$PATH"
+ENTRYPOINT ["python", "run.py", "-p", "80"]
 EXPOSE 80
