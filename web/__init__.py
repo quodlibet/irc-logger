@@ -73,7 +73,6 @@ IRC_CHANS = {
     "quodlibet": "#quodlibet@irc.oftc.net",
     "pypy": "#pypy@irc.libera.chat",
     "hpy": "#hpy@irc.libera.chat",
-    "pygobject": "#python@irc.gnome.org",
     "qownnotes": "#qownnotes@irc.freenode.org",
 }
 
