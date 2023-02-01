@@ -6,12 +6,12 @@ RUN apt-get update && apt-get install -y \
     python3-venv \
     && rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m pip install "poetry==1.1.6"
+RUN python3 -m pip install "poetry==1.3.2"
 
 COPY . /app
 WORKDIR /app
 RUN poetry config virtualenvs.in-project true
-RUN poetry install --no-dev
+RUN poetry install --only main
 
 FROM ubuntu:focal
 
